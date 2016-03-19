@@ -134,12 +134,37 @@ public class CoordinatorThread extends Thread {
 		return this.in.readLine();
 	}
 	
+	private void sendMessage(String message){
+		this.out.println(message);
+	}
+	
+	/**
+	 * Send message to a particular participant by id
+	 * @param message
+	 * @param id
+	 */
+	private void sendMessage(String message, int id){
+		//TODO create socket and send message
+	}
+	
 	private void sendACK(boolean status){
 		this.out.println((status) ? "1" : "0");
 	}
 	
 	private void multicastSend(String message){
-		
+		//TODO
+		Participant p = null;
+		for(Integer id: this.multicastGroup.keySet()){
+			p = this.multicastGroup.get(id);
+			if(p.isOnline){
+				this.sendMessage(message, id);
+			}
+			else{
+				//store message in buffer if participant is not online
+				LinkedList<Message> messageQueue = this.messageBuffer.get(id);
+				messageQueue.add(new Message(message));
+			}
+		}
 	}
 	
 	
