@@ -2,18 +2,17 @@ import java.net.Socket;
 
 public class ParticipantThread extends Thread{
 	
-	public String ID;
+	public int ID;
 	public String IP_coordinator;
 	public int portCoordinator;
 	public int portUserCmd;
 	public boolean isOnline;
 	public Socket participantSocket = null;
 	
-	public ParticipantThread(String ID, String IP_coordinator, int portCoordinator, int portUserCmd, boolean isOnline){
+	public ParticipantThread(int ID, String IP_coordinator, int portCoordinator, boolean isOnline){
 		this.ID = ID;
 		this.IP_coordinator = IP_coordinator;
 		this.portCoordinator = portCoordinator;
-		this.portUserCmd = portUserCmd;
 		this.isOnline = isOnline;
 	}
 	

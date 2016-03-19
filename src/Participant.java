@@ -1,32 +1,29 @@
 import java.util.*;
 import java.io.IOException;
 import java.net.*;
+import java.io.File;
 
 
 public class Participant {
 	
-	protected String ID;
+	public int ID;
 	private String IP_coordinator;
 	private int portCoordinator;
-	private int portUserCmd;
-	protected boolean isOnline;
+	public boolean isOnline;
 	private Socket participantSocket = null;
 	private ParticipantListener listenerCoordinator = null;
 	private String command = null;
 	
-	public Participant(String ID, String IP_coordinator, int portCoordinator, int portUserCmd, boolean isOnline){
+	public Participant(int ID, String IP_coordinator, int portCoordinator, int portUserCmd, boolean isOnline){
 		this.ID = ID;
 		this.IP_coordinator = IP_coordinator;
 		this.portCoordinator = portCoordinator;
-		this.portUserCmd = portUserCmd;
 		this.isOnline = isOnline;
 	}
 	
 	public void run(){
 		try {
-			
-			
-			
+
 			this.participantSocket = new Socket(this.IP_coordinator, this.portCoordinator);
 			
 			//create the multicast listener thread
@@ -34,26 +31,24 @@ public class Participant {
 			//start threads
 			this.listenerCoordinator.start();
 			//retrieve a command from the user
-			System.out.println("Enter command:" );
-			Scanner in = new Scanner(System.in);
-			command = in.nextLine();
-			
+
+			Scanner in;
 			while (this.command != "quit"){
+				System.out.println("Enter command:" );
+				in = new Scanner(System.in);
+				command = in.nextLine();
+				
 				//create the user thread
 				ParticipantThread userCommandThread = new ParticipantThread(this.ID, this.IP_coordinator, 
-						this.portCoordinator, this.portUserCmd, this.isOnline);
-				
-				
-				
-				
-				
+						this.portCoordinator, this.isOnline);
+				userCommandThread.start();		
+				try {
+					userCommandThread.join();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 			};
 			this.listenerCoordinator.participantSocket.close();
-		
-			
-			
-			
-			in.close();
 			
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
@@ -63,8 +58,37 @@ public class Participant {
 	}
 		
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
+		String participantID="";
+		String logfileName="";
+		String IPAddress="";
+		//usage checking
+		if(args.length != 1){
+			System.out.println("Please enter a valid file name as the first parameter.");
+			System.out.println("Usage: [filename.txt]");
+		}
+		//set equal to first (and only) argument
+		String inputFileName = args[0];
+		//creates new file
+		File file = new File(inputFileName);
+		try{
+		Scanner scanner = new Scanner(file);
+		while(scanner.hasNext()){
+		participantID = scanner.nextLine();
+		logfileName = scanner.nextLine();
+		IPAddress = scanner.nextLine();
+		}
+		scanner.close();
+		}
+		catch(IOException ioe){
+		ioe.printStackTrace();
+		}
+		
+		//checking
+		System.out.println(participantID);
+		System.out.println(logfileName);
+		System.out.println(IPAddress);
+		
 
-	}
+}
 
 }
