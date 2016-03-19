@@ -35,26 +35,24 @@ public class Participant {
 			//start threads
 			this.listenerCoordinator.start();
 			//retrieve a command from the user
-			System.out.println("Enter command:" );
-			Scanner in = new Scanner(System.in);
-			command = in.nextLine();
-			
+
+			Scanner in;
 			while (this.command != "quit"){
+				System.out.println("Enter command:" );
+				in = new Scanner(System.in);
+				command = in.nextLine();
+				
 				//create the user thread
 				ParticipantThread userCommandThread = new ParticipantThread(this.ID, this.IP_coordinator, 
 						this.portCoordinator, this.portUserCmd, this.isOnline);
-				
-				
-				
-				
-				
+				userCommandThread.start();		
+				try {
+					userCommandThread.join();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 			};
 			this.listenerCoordinator.participantSocket.close();
-		
-			
-			
-			
-			in.close();
 			
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
