@@ -63,8 +63,37 @@ public class Participant {
 	}
 		
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
+		String participantID="";
+		String logfileName="";
+		String IPAddress="";
+		//usage checking
+		if(args.length != 1){
+			System.out.println("Please enter a valid file name as the first parameter.");
+			System.out.println("Usage: [filename.txt]");
+		}
+		//set equal to first (and only) argument
+		String inputFileName = args[0];
+		//creates new file
+		File file = new File(inputFileName);
+		try{
+		Scanner scanner = new Scanner(file);
+		while(scanner.hasNext()){
+		participantID = scanner.nextLine();
+		logfileName = scanner.nextLine();
+		IPAddress = scanner.nextLine();
+		}
+		scanner.close();
+		}
+		catch(IOException ioe){
+		ioe.printStackTrace();
+		}
+		
+		//checking
+		System.out.println(participantID);
+		System.out.println(logfileName);
+		System.out.println(IPAddress);
+		
 
-	}
+}
 
 }
