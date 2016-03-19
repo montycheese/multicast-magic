@@ -58,7 +58,7 @@ public class Participant {
 		}
 	}
 		
-	public void configuration_parser(String[] args){
+	public static Participant configuration_parser(String[] args){
 
 		//usage checking
 		if(args.length != 1){
@@ -69,14 +69,22 @@ public class Participant {
 		String inputFileName = args[0];
 		//creates new file
 		File file = new File(inputFileName);
+		
+		
+		//TODO GET PORT
+		int port = -1;
+		int _ID = -1;
+		String _logFileName = null;
+		String _IP_Coordinator = null;
 		try{
-		Scanner scanner = new Scanner(file);
-		while(scanner.hasNext()){
-			this.ID = scanner.nextInt();
-			logfileName = scanner.next();
-			this.IP_coordinator = scanner.next();
-		}
-		scanner.close();
+			
+			Scanner scanner = new Scanner(file);
+			while(scanner.hasNext()){
+				_ID = scanner.nextInt();
+				_logFileName = scanner.next();
+				_IP_Coordinator = scanner.next();
+			}
+			scanner.close();
 
 		}
 		catch(IOException ioe){
@@ -84,15 +92,15 @@ public class Participant {
 		}
 		
 		//checking
-		System.out.println(this.ID);
-		System.out.println(this.logfileName);
-		System.out.println(this.IP_coordinator);
+		System.out.println(_ID);
+		System.out.println(_logFileName);
+		System.out.println(_IP_Coordinator);
 		
+		return new Participant(_ID, _IP_Coordinator, port, true);
 	}
 		
 	public static void main(String[] args) {
-		Participant P1 = new Participant(0, "", 0, false);
-		P1.configuration_parser(args);
+		Participant P1 = Participant.configuration_parser(args);
 		P1.run();
 
 	
