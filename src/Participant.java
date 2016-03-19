@@ -6,28 +6,24 @@ import java.io.File;
 
 public class Participant {
 	
-	public String ID;
+	public int ID;
 	private String IP_coordinator;
 	private int portCoordinator;
-	private int portUserCmd;
 	public boolean isOnline;
 	private Socket participantSocket = null;
 	private ParticipantListener listenerCoordinator = null;
 	private String command = null;
 	
-	public Participant(String ID, String IP_coordinator, int portCoordinator, int portUserCmd, boolean isOnline){
+	public Participant(int ID, String IP_coordinator, int portCoordinator, int portUserCmd, boolean isOnline){
 		this.ID = ID;
 		this.IP_coordinator = IP_coordinator;
 		this.portCoordinator = portCoordinator;
-		this.portUserCmd = portUserCmd;
 		this.isOnline = isOnline;
 	}
 	
 	public void run(){
 		try {
-			
-			
-			
+
 			this.participantSocket = new Socket(this.IP_coordinator, this.portCoordinator);
 			
 			//create the multicast listener thread
@@ -44,7 +40,7 @@ public class Participant {
 				
 				//create the user thread
 				ParticipantThread userCommandThread = new ParticipantThread(this.ID, this.IP_coordinator, 
-						this.portCoordinator, this.portUserCmd, this.isOnline);
+						this.portCoordinator, this.isOnline);
 				userCommandThread.start();		
 				try {
 					userCommandThread.join();
