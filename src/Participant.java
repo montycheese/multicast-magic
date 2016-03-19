@@ -13,6 +13,7 @@ public class Participant {
 	private Socket participantSocket = null;
 	private ParticipantListener listenerCoordinator = null;
 	private String command = null;
+	private String logfileName = null;
 	
 	public Participant(int ID, String IP_coordinator, int portCoordinator, boolean isOnline){
 		this.ID = ID;
@@ -57,10 +58,8 @@ public class Participant {
 		}
 	}
 		
-	public static void main(String[] args) {
-		int participantID = 0;
-		String logfileName="";
-		String IPAddress="";
+	public void configuration_parser(String[] args){
+
 		//usage checking
 		if(args.length != 1){
 			System.out.println("Please enter a valid file name as the first parameter.");
@@ -73,9 +72,9 @@ public class Participant {
 		try{
 		Scanner scanner = new Scanner(file);
 		while(scanner.hasNext()){
-		participantID = scanner.nextInt();
-		logfileName = scanner.next();
-		IPAddress = scanner.next();
+			this.ID = scanner.nextInt();
+			logfileName = scanner.next();
+			this.IP_coordinator = scanner.next();
 		}
 		scanner.close();
 		}
@@ -84,11 +83,18 @@ public class Participant {
 		}
 		
 		//checking
-		System.out.println(participantID);
-		System.out.println(logfileName);
-		System.out.println(IPAddress);
+		System.out.println(this.ID);
+		System.out.println(this.logfileName);
+		System.out.println(this.IP_coordinator);
 		
+	}
+		
+	public static void main(String[] args) {
+		Participant P1 = new Participant(0, "", 0, false);
+		P1.configuration_parser(args);
+		P1.run();
 
-}
+	
+	}
 
 }
