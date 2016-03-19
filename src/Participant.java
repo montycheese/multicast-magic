@@ -71,16 +71,16 @@ public class Participant {
 		//creates new file
 		File file = new File(inputFileName);
 		try{
-		Scanner scanner = new Scanner(file);
-		while(scanner.hasNext()){
-		participantID = scanner.nextInt();
-		logfileName = scanner.next();
-		IPAddress = scanner.next();
-		}
-		scanner.close();
+			Scanner scanner = new Scanner(file);
+			while(scanner.hasNext()){
+				participantID = scanner.nextInt();
+				logfileName = scanner.next();
+				IPAddress = scanner.next();
+			}
+			scanner.close();
 		}
 		catch(IOException ioe){
-		ioe.printStackTrace();
+			ioe.printStackTrace();
 		}
 		
 		//checking

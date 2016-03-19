@@ -58,11 +58,12 @@ public class Coordinator {
 	
 
 	public static void main(String[] args) {
-		String configFilePath = "TODO.txt";
+		if(args.length != 1){
+			System.out.println("The program should be run as so: java Coordinator [config.txt]");
+			System.exit(0);
+		}
+		String configFilePath = args[1];
 		
-		
-		
-
 	}
 
 }
