@@ -10,7 +10,7 @@ public class Message {
 	private long createTime;
 	
 	//constructor
-	Message(String message, long createTime){
+	Message(String message){
 		createTime = System.nanoTime();
 		this.message = message;
 	}
@@ -27,6 +27,10 @@ public class Message {
 		Date date = new Date();
 		String timestamp = String.format("%tT\n", date);
 		return timestamp;
+	}
+	
+	public String toString(){
+		return this.message;
 	}
 	
 	/*
