@@ -2,7 +2,6 @@
  * Authors: Montana Wong, Justin Tumale, Matthew Haneburger
  * Constructs message to be sent with start time
  * */
-//import java.text.SimpleDateFormat; //formatting elapsed time
 import java.util.Date; //use for create time
 public class Message {
 	
@@ -38,15 +37,5 @@ public class Message {
 	 * 				 -> we can receive out messages
 	 * }
 	 * */
-	
-	//disregard; just to reference
-	/*
-	 * date = new SimpleDateFormat("HH:mm:ss");
-	private long generateElapsed(){
-		long start = System.nanoTime();
-		long end = System.nanoTime();
-		long elapse = start - end;
-		return elapse;
-	}*/
 	
 }
