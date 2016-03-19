@@ -6,7 +6,6 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.concurrent.ExecutorService;
 
 
 public class CoordinatorThread extends Thread {
@@ -81,7 +80,21 @@ public class CoordinatorThread extends Thread {
 	}
 	
 	public void register(int id, String ip, int port){
-		
+		Participant p = new Participant(id, ip, port, true);
+		//add participant to group
+		this.multicastGroup.put(id, p);
+		//create a message buffer for this new participant
+		this.messageBuffer.put(id, new LinkedList<Message>());
+	}
+	
+	public void deregister(int id){
+		Participant p = this.multicastGroup.remove(new Integer(id));
+		if (p == null){
+			System.out.println("Error, participant not registered");
+		}
+		else{
+			this.messageBuffer.remove(new Integer(id));
+		}
 	}
 	
 	public String receive() throws IOException{

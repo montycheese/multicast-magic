@@ -5,11 +5,11 @@ import java.net.*;
 
 public class Participant {
 	
-	public String ID;
+	protected String ID;
 	private String IP_coordinator;
 	private int portCoordinator;
 	private int portUserCmd;
-	public boolean isOnline;
+	protected boolean isOnline;
 	private Socket participantSocket = null;
 	private ParticipantListener listenerCoordinator = null;
 	private String command = null;
