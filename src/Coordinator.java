@@ -2,6 +2,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -9,7 +10,7 @@ import java.util.concurrent.Executors;
 public class Coordinator {
 	
 	private HashMap<Integer, Participant> multicastGroup;
-	private HashMap<Integer, Message[]> messageBuffer;
+	private HashMap<Integer, LinkedList<Message>> messageBuffer;
 	private ExecutorService threadPool;
 	private long threshold;
 	private int portNum;
@@ -39,18 +40,21 @@ public class Coordinator {
 		
 	}
 	
-	public void listen(){
+	public void listen() throws IOException{
 		do{
 			Socket clientSocket = this.sock.accept();
-			this.threadPool.execute(coordinatorThread);
+			CoordinatorThread worker = new CoordinatorThread(this.sock,
+					clientSocket,
+					this.multicastGroup,
+					this.messageBuffer,
+					this.threshold
+			);
+			this.threadPool.execute(worker);
 		}while(true);
 				
 	}
 	
 	
-	private void sendAll(String message){
-		
-	}
 	
 
 	public static void main(String[] args) {
