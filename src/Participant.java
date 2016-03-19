@@ -6,15 +6,15 @@ import java.io.File;
 
 public class Participant {
 	
-	public int ID;
+	protected int ID;
 	private String IP_coordinator;
-	private int portCoordinator;
-	public boolean isOnline;
+	protected int portCoordinator;
+	protected boolean isOnline;
 	private Socket participantSocket = null;
 	private ParticipantListener listenerCoordinator = null;
 	private String command = null;
 	
-	public Participant(int ID, String IP_coordinator, int portCoordinator, int portUserCmd, boolean isOnline){
+	public Participant(int ID, String IP_coordinator, int portCoordinator, boolean isOnline){
 		this.ID = ID;
 		this.IP_coordinator = IP_coordinator;
 		this.portCoordinator = portCoordinator;

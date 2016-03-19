@@ -59,10 +59,20 @@ public class CoordinatorThread extends Thread {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		finally{
+			try {
+				this.in.close();
+				this.out.close();
+				this.clientSock.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		
 	}
 	
-	public String parse(String message){
+	private String parse(String message){
 		String[] tokens = message.split(",");
 		int code = Integer.valueOf(tokens[0]);
 		if(code > 5 || code < 1){
@@ -79,7 +89,7 @@ public class CoordinatorThread extends Thread {
 		return null;
 	}
 	
-	public void register(int id, String ip, int port){
+	private void register(int id, String ip, int port){
 		Participant p = new Participant(id, ip, port, true);
 		//add participant to group
 		this.multicastGroup.put(id, p);
@@ -87,7 +97,7 @@ public class CoordinatorThread extends Thread {
 		this.messageBuffer.put(id, new LinkedList<Message>());
 	}
 	
-	public void deregister(int id){
+	private void deregister(int id){
 		Participant p = this.multicastGroup.remove(new Integer(id));
 		if (p == null){
 			System.out.println("Error, participant not registered");
@@ -97,15 +107,38 @@ public class CoordinatorThread extends Thread {
 		}
 	}
 	
-	public String receive() throws IOException{
+	private void disconnect(int id){
+		Participant p = this.multicastGroup.get(new Integer(id));
+		if (p == null){
+			System.out.println("Error, participant not registered");
+		}
+		else{
+			p.isOnline = false;
+		}
+		
+	}
+	
+	private void reconnect(int id, int port){
+		Participant p = this.multicastGroup.get(new Integer(id));
+		if (p == null){
+			System.out.println("Error, participant not registered");
+		}
+		else{
+			p.isOnline = true;
+			p.portCoordinator = port;
+		}
+		
+	}
+	
+	private String receive() throws IOException{
 		return this.in.readLine();
 	}
 	
-	public void sendACK(boolean status){
+	private void sendACK(boolean status){
 		this.out.println((status) ? "1" : "0");
 	}
 	
-	private void sendAll(String message){
+	private void multicastSend(String message){
 		
 	}
 	
