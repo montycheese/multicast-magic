@@ -50,9 +50,13 @@ public class CoordinatorThread extends Thread {
 			cmd = this.receive();
 			String response = this.parse(cmd);
 			//Send ACK
-			this.sendACK();
+			//this.sendACK(true);
 			//perform requested action
-		} catch (IOException e) {
+		}  
+		catch(IllegalArgumentException iae){
+			this.sendACK(false);
+		}
+		catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -60,8 +64,15 @@ public class CoordinatorThread extends Thread {
 	}
 	
 	public String parse(String message){
-		//TODO
-		switch(message){
+		String[] tokens = message.split(",");
+		int code = Integer.valueOf(tokens[0]);
+		if(code > 5 || code < 1){
+			throw new IllegalArgumentException("Participant entered an invalid command");
+		}
+		String action = CommandCode.getMethodFromCode(Integer.valueOf(code));
+		//move send ack here
+		this.sendACK(true);
+		switch(action){
 		case "Register":
 			break;
 		}
@@ -69,12 +80,16 @@ public class CoordinatorThread extends Thread {
 		return null;
 	}
 	
+	public void register(int id, String ip, int port){
+		
+	}
+	
 	public String receive() throws IOException{
 		return this.in.readLine();
 	}
 	
-	public void sendACK(){
-		this.out.println("ACK");
+	public void sendACK(boolean status){
+		this.out.println((status) ? "1" : "0");
 	}
 	
 	private void sendAll(String message){
