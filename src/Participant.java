@@ -58,7 +58,7 @@ public class Participant {
 	}
 		
 	public static void main(String[] args) {
-		String participantID="";
+		int participantID = 0;
 		String logfileName="";
 		String IPAddress="";
 		//usage checking
@@ -73,9 +73,9 @@ public class Participant {
 		try{
 		Scanner scanner = new Scanner(file);
 		while(scanner.hasNext()){
-		participantID = scanner.nextLine();
-		logfileName = scanner.nextLine();
-		IPAddress = scanner.nextLine();
+		participantID = scanner.nextInt();
+		logfileName = scanner.next();
+		IPAddress = scanner.next();
 		}
 		scanner.close();
 		}
