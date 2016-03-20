@@ -1,4 +1,5 @@
 import java.net.Socket;
+import java.util.Arrays;
 
 public class ParticipantThread extends Thread{
 	
@@ -8,13 +9,22 @@ public class ParticipantThread extends Thread{
 	public int portUserCmd;
 	public boolean isOnline;
 	public Socket participantSocket = null;
+	protected String myIPAddress = null;
+	protected String command = null;
+	protected String message = null;
 	
-	public ParticipantThread(int ID, String IP_coordinator, int portCoordinator, boolean isOnline){
+	
+	public ParticipantThread(int ID, String IP_coordinator, int portCoordinator, 
+			boolean isOnline, String myIPAddress, String command, String message){
 		this.ID = ID;
 		this.IP_coordinator = IP_coordinator;
 		this.portCoordinator = portCoordinator;
 		this.isOnline = isOnline;
+		this.myIPAddress = myIPAddress;
+		this.command = command;
+		this.message = message;
 	}
+	
 	
 	/* Register
 	 * Participant has to register with the coordinator specifying its ID, 	
@@ -26,7 +36,16 @@ public class ParticipantThread extends Thread{
 	 * @param myPort: the port number where this participant will receive messages
 	 */
 	public void register(int myPort){
-		//TODO
+		//Format: Code | ID | IP | Port
+		String[]registerMessageArray = {
+				"1", 
+				String.valueOf(this.ID), 
+				String.valueOf(this.myIPAddress), 
+				String.valueOf(myPort)};
+		
+		String registerMessage = Arrays.toString(registerMessageArray);
+		
+		//TODO send the message to the coordinator
 	}
 	
 	/* Deregister
@@ -37,7 +56,11 @@ public class ParticipantThread extends Thread{
 	 * the port and may become dormant or die. 
 	 */
 	public void deregister(){
-		//TODO
+		//Format: Code | ID 
+		String[]deregisterMessageArray = {"2", String.valueOf(this.ID)};
+		String deregisterMessage = Arrays.toString(deregisterMessageArray);
+		
+		//TODO send the message to the coordinator
 	}
 	
 	/* Disconnect
@@ -47,7 +70,11 @@ public class ParticipantThread extends Thread{
 	 */
 	
 	public void disconnect(){
-		//TODO
+		//Format: Code | ID 
+		String[]disconnectMessageArray = {"3", String.valueOf(this.ID)};
+		String disconnectMessage = Arrays.toString(disconnectMessageArray);	
+		
+		//TODO send the message to the coordinator
 	}
 	
 	/* Reconnect
@@ -60,7 +87,14 @@ public class ParticipantThread extends Thread{
 	 */
 	
 	public void reconnect(int myPort){
-		//TODO
+		//Format: Code | ID | Port
+		String[]reconnectMessageArray = {
+				"4", 
+				String.valueOf(this.ID), 
+				String.valueOf(myPort)};
+		String reconnectMessage = Arrays.toString(reconnectMessageArray);	
+		
+		//TODO send the message to the coordinator
 	}
 	
 	/* Send
@@ -71,8 +105,12 @@ public class ParticipantThread extends Thread{
 	 * @param message: the message to be multicasted
 	 */
 	public void msend(String message){
-		//TODO
-	}
+		//Format: Code | ID | IP | Port
+		String[] msendMessageArray = {"5", };
+		String msendMessage = Arrays.toString(msendMessageArray);	
+		
+		//TODO send the message to the coordinator	
+		}
 	
 	@Override
 	public void run(){
