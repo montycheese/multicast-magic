@@ -4,6 +4,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.LinkedList;
 
@@ -72,7 +73,7 @@ public class CoordinatorThread extends Thread {
 		
 	}
 	
-	private String parse(String message){
+	private void parse(String message){
 		String[] tokens = message.split(",");
 		int code = Integer.valueOf(tokens[0]);
 		if(code > 5 || code < 1){
@@ -81,12 +82,33 @@ public class CoordinatorThread extends Thread {
 		String action = CommandCode.getMethodFromCode(Integer.valueOf(code));
 		//move send ack here
 		this.sendACK(true);
-		switch(action){
-		case "Register":
-			break;
+		try{
+			switch(action){
+			case "Register":
+				this.register(Integer.valueOf(tokens[1]), tokens[2], Integer.valueOf(tokens[3]));
+				break;
+			case "Deregister":
+				this.deregister(Integer.valueOf(tokens[1]));
+				break;
+			case "Disconnect":
+				this.disconnect(Integer.valueOf(tokens[1]));
+				break;
+			case "Reconnect":
+				break;
+			case "MSend":
+				break;
+			default:
+				System.out.println("Code meltdown failure");
+				break;
+			}
+		}
+		catch(NumberFormatException nfe){
+			System.out.println("Participant send malformed input");
+		}
+		catch(ArrayIndexOutOfBoundsException aoobe){
+			System.out.println("Participant send malformed input");
 		}
 		
-		return null;
 	}
 	
 	private void register(int id, String ip, int port){
@@ -142,9 +164,25 @@ public class CoordinatorThread extends Thread {
 	 * Send message to a particular participant by id
 	 * @param message
 	 * @param id
+	 * @throws IOException 
+	 * @throws UnknownHostException 
 	 */
-	private void sendMessage(String message, int id){
-		//TODO create socket and send message
+	private void sendMessage(String message, Participant p) throws UnknownHostException, IOException{
+		//create socket
+		int port = p.portCoordinator;
+		String host = "localhost";
+		Socket sock = new Socket(host, port);
+		
+		//send message
+	    PrintWriter out = new PrintWriter(sock.getOutputStream());
+	    out.println(message);
+	    out.flush();
+	    
+	    //close socket
+	    out.close();
+	    if(sock != null){
+	    	sock.close();
+	    }
 	}
 	
 	private void sendACK(boolean status){
@@ -157,7 +195,17 @@ public class CoordinatorThread extends Thread {
 		for(Integer id: this.multicastGroup.keySet()){
 			p = this.multicastGroup.get(id);
 			if(p.isOnline){
-				this.sendMessage(message, id);
+				try {
+					this.sendMessage(message, p);
+				}
+				catch(UnknownHostException uhe){
+					System.out.printf("Participant with id: %d at port: %d does not exist\n", id, p.portCoordinator);
+					uhe.printStackTrace();
+				}
+				catch (IOException e) {
+					System.out.printf("Participant with id: %d at port: %d IO Exception\n", id, p.portCoordinator);
+					e.printStackTrace();
+				}
 			}
 			else{
 				//store message in buffer if participant is not online
