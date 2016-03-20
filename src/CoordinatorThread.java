@@ -1,3 +1,9 @@
+/**File: CoordinatorThread.java
+ * Authors: Montana Wong, Justin Tumale, Matthew Haneburger
+ * Handles requests from participants. Never fails. Handles methods for the
+ * five fundamental operations of the participants. (Register, Deregister, Disconnect, Reconnect, Msend)
+ * Also handles the messages received by participants accordingly.
+*/
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -8,7 +14,7 @@ import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.LinkedList;
 
-
+//description above
 public class CoordinatorThread extends Thread {
 	private ServerSocket sock;
 	private Socket clientSock;
@@ -43,6 +49,7 @@ public class CoordinatorThread extends Thread {
 	}
 	
 	@Override
+	
 	public void run(){
 		String cmd = "";
 		try {
@@ -72,7 +79,11 @@ public class CoordinatorThread extends Thread {
 		}
 		
 	}
-	
+	/**
+	* @param Message
+	* Parses message and tokenizes requests
+	* Uses switch case to determine which command to apply 
+	*/
 	private void parse(String message){
 		String[] tokens = message.split(",");
 		int code = Integer.valueOf(tokens[0]);
