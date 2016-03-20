@@ -15,26 +15,34 @@ public class Participant {
 	
 	protected int ID;
 	private String IP_coordinator;
-	protected int portCoordinator;
+	protected int coordinatorPort;
+	private int listenPort;
 	protected boolean isOnline;
 	private Socket participantSocket = null;
 	private ParticipantListener listenerCoordinator = null;
-	private String command = null;
+	private String input = null;
 	private String logfileName = null;
+	private String myIPAddress= null;
 	
 	public Participant(int ID, String IP_coordinator, int portCoordinator, boolean isOnline){
 		this.ID = ID;
 		this.IP_coordinator = IP_coordinator;
-		this.portCoordinator = portCoordinator;
+		this.coordinatorPort = portCoordinator;
 		this.isOnline = isOnline;
+		try {
+			InetAddress ipAddress = InetAddress.getLocalHost();
+			this.myIPAddress = ipAddress.getHostName();
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		}
 	}
-	
+		
 	public void run(){
 		try {
 			//this.participantSocket = new Socket(this.IP_coordinator, this.portCoordinator);
 			//run on local host for now
 			this.participantSocket = new 
-					Socket(InetAddress.getLocalHost().getHostName(), this.portCoordinator);
+					Socket(InetAddress.getLocalHost().getHostName(), this.coordinatorPort);
 			
 			//create the multicast listener thread
 			this.listenerCoordinator = new ParticipantListener(this.participantSocket);
@@ -43,14 +51,36 @@ public class Participant {
 			//retrieve a command from the user
 
 			Scanner in;
-			while (this.command != "quit"){
+			while (this.input != "quit"){
 				System.out.println("Enter command:" );
 				in = new Scanner(System.in);
-				command = in.nextLine();
+				input = in.nextLine();
+				
+				//parse the input for a command and a message
+				String command = null;
+				String message = null;
+				String [] commandAndMessage = input.split(" ", 2);
+				if (commandAndMessage.length == 1){
+					command = commandAndMessage[0];
+				}
+				else if (commandAndMessage.length == 2){
+					command = commandAndMessage[0];
+					message = commandAndMessage[1];
+				}
+				else{
+					System.out.println("Please enter a valid command");
+				}
 				
 				//create the user thread
-				ParticipantThread userCommandThread = new ParticipantThread(this.ID, this.IP_coordinator, 
-						this.portCoordinator, this.isOnline);
+				ParticipantThread userCommandThread = new ParticipantThread(
+						this.ID, 
+						this.IP_coordinator, 
+						this.coordinatorPort, 
+						this.isOnline,
+						this.myIPAddress,
+						command,
+						message);
+				//start the thread
 				userCommandThread.start();		
 				try {
 					userCommandThread.join();
@@ -97,7 +127,7 @@ public class Participant {
 			}
 			scanner.close();
 			
-			String[] ipAndPortArray =  _ipAndPortString.split(":");
+			String[] ipAndPortArray =  _ipAndPortString.trim().split(":");
 			_IP_Coordinator = ipAndPortArray[0];
 			_portCoordinator = ipAndPortArray[1];
 			

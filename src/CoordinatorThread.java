@@ -147,7 +147,7 @@ public class CoordinatorThread extends Thread {
 		}
 		else{
 			p.isOnline = true;
-			p.portCoordinator = port;
+			p.coordinatorPort = port;
 		}
 		
 	}
