@@ -30,6 +30,7 @@ public class Coordinator {
 	}
 	
 	public void run() throws IOException{
+		System.out.println("Coordinator running.");
 		this.sock = new ServerSocket(
 				this.portNum,
 				this.backlog
@@ -59,7 +60,7 @@ public class Coordinator {
 	
 	@Override
 	public String toString(){
-		return String.format("port: %d, threshold: %l", this.portNum, this.threshold);
+		return String.format("port: %d, threshold: %d seconds", this.portNum, this.threshold);
 	}
 	
 	public static Coordinator createFromFile(String filename) throws IllegalArgumentException, FileNotFoundException{
@@ -89,7 +90,7 @@ public class Coordinator {
 			System.exit(0);
 		}
 		
-		String configFilePath = (DEVELOPMENT) ? "../config/PP3-coordinator-conf.txt" : args[1];
+		String configFilePath = (DEVELOPMENT) ? "config/PP3-coordinator-conf.txt" : args[1];
 		Coordinator c = null;
 		
 		//create coordinator from config file
@@ -98,9 +99,11 @@ public class Coordinator {
 		} 
 		catch (FileNotFoundException e) {
 			System.out.println("Cannot find file: " + configFilePath);
+			System.exit(0);
 		}
 		catch(IllegalArgumentException iae){
 			System.out.println("Please check the parameters of the configuration file.");
+			System.exit(0);
 		}
 		
 		try {
@@ -110,6 +113,7 @@ public class Coordinator {
 			e.printStackTrace();
 			System.out.println("Error binding to port, port may be in use. Possible socket error");
 		}
+		System.out.println("Coordinator shutdown.");
 		
 	}
 
