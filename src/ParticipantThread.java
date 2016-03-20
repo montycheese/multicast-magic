@@ -5,20 +5,22 @@ public class ParticipantThread extends Thread{
 	
 	public int ID;
 	public String IP_coordinator;
-	public int portCoordinator;
+	public int coordinatorPort;
+	public int listenPort;
 	public int portUserCmd;
 	public boolean isOnline;
 	public Socket participantSocket = null;
 	protected String myIPAddress = null;
 	protected String command = null;
 	protected String message = null;
+
 	
-	
-	public ParticipantThread(int ID, String IP_coordinator, int portCoordinator, 
+	public ParticipantThread(int ID, String IP_coordinator, int coordinatorPort, int listenPort, 
 			boolean isOnline, String myIPAddress, String command, String message){
 		this.ID = ID;
 		this.IP_coordinator = IP_coordinator;
-		this.portCoordinator = portCoordinator;
+		this.coordinatorPort = coordinatorPort;
+		this.listenPort = listenPort;
 		this.isOnline = isOnline;
 		this.myIPAddress = myIPAddress;
 		this.command = command;
@@ -114,6 +116,24 @@ public class ParticipantThread extends Thread{
 	
 	@Override
 	public void run(){
+		switch (command){
+			case "register":
+				this.register(this.listenPort);
+				break;
+			case "deregister":
+				this.deregister();
+				break;
+			case "disconnect":
+				this.disconnect();
+				break;
+			case "reconnect":
+				this.register(this.listenPort);
+				break;
+			case "msend":
+				this.msend(this.message);
+				break;
+		
+		}
 		
 	}
 

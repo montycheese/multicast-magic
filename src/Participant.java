@@ -76,6 +76,7 @@ public class Participant {
 						this.ID, 
 						this.IP_coordinator, 
 						this.coordinatorPort, 
+						this.listenPort,
 						this.isOnline,
 						this.myIPAddress,
 						command,
@@ -149,8 +150,6 @@ public class Participant {
 	public static void main(String[] args) {
 		Participant P1 = Participant.configurationParser(args);
 		P1.run();
-
-	
 	}
 
 }
