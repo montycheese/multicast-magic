@@ -99,15 +99,6 @@ public class Participant {
 		catch(IOException ioe){
 			ioe.printStackTrace();
 		}
-		
-		/*
-		
-		
-		String address = "192.123.324.123:4567";
-		String[] portArray = address.trim().split(":");
-		String portNumber = portArray[1];
-		
-		*/
 
 		//checking
 		System.out.println(_ID);
