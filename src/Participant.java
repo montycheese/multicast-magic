@@ -1,9 +1,16 @@
+/*File: Participant.java
+ *Authors: Montana Wong, Justin Tumale, Matthew Haneburger
+ *Description: Participant of the coordinator pool. Sends and receives messages
+ *within specified time from coordinator. Runs with only one argument [filename.txt]
+ *and parses it to obtain the IP address, Port number, ID, and the file name that 
+ *will log all of the messages.
+ * */
 import java.util.*;
 import java.io.IOException;
 import java.net.*;
 import java.io.File;
 
-
+//description above
 public class Participant {
 	
 	protected int ID;
