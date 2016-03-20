@@ -1,4 +1,7 @@
-
+/*File: CommandCode.java
+ *Authors: Montana Wong, Justin Tumale, Matthew Haneburger
+ *Helper file that contains the commands that each participant will utilize and handles them accordingly.
+*/
 public enum CommandCode {
 	uno (1, "Register"),
 	dos (2, "Deregister"),
