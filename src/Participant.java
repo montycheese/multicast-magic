@@ -15,8 +15,8 @@ public class Participant {
 	
 	protected int ID;
 	private String IP_coordinator;
-	protected int coordinatorPort;
-	private int listenPort;
+	private int coordinatorPort;
+	protected int listenPort;
 	protected boolean isOnline;
 	private Socket participantSocket = null;
 	private ParticipantListener listenerCoordinator = null;
