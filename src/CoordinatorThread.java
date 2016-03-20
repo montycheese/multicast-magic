@@ -48,10 +48,7 @@ public class CoordinatorThread extends Thread {
 		try {
 			//Read command from participant
 			cmd = this.receive();
-			String response = this.parse(cmd);
-			//Send ACK
-			//this.sendACK(true);
-			//perform requested action
+			this.parse(cmd);
 		}  
 		catch(IllegalArgumentException iae){
 			this.sendACK(false);
@@ -62,11 +59,11 @@ public class CoordinatorThread extends Thread {
 		}
 		finally{
 			try {
+				//shutdown sockets, writer and reader
 				this.in.close();
 				this.out.close();
 				this.clientSock.close();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -94,8 +91,10 @@ public class CoordinatorThread extends Thread {
 				this.disconnect(Integer.valueOf(tokens[1]));
 				break;
 			case "Reconnect":
+				this.reconnect(Integer.valueOf(tokens[1]), Integer.valueOf(tokens[2]));
 				break;
 			case "MSend":
+				this.multicastSend(tokens[1]);
 				break;
 			default:
 				System.out.println("Code meltdown failure");
@@ -103,10 +102,10 @@ public class CoordinatorThread extends Thread {
 			}
 		}
 		catch(NumberFormatException nfe){
-			System.out.println("Participant send malformed input");
+			System.out.println("Participant sent malformed input");
 		}
-		catch(ArrayIndexOutOfBoundsException aoobe){
-			System.out.println("Participant send malformed input");
+		catch(ArrayIndexOutOfBoundsException aioobe){
+			System.out.println("Participant sent malformed input");
 		}
 		
 	}
@@ -147,7 +146,8 @@ public class CoordinatorThread extends Thread {
 		}
 		else{
 			p.isOnline = true;
-			p.coordinatorPort = port;
+			p.listenPort = port;
+			this.sendMultiMessage(id, port);
 		}
 		
 	}
@@ -169,7 +169,7 @@ public class CoordinatorThread extends Thread {
 	 */
 	private void sendMessage(String message, Participant p) throws UnknownHostException, IOException{
 		//create socket
-		int port = p.portCoordinator;
+		int port = p.listenPort;
 		String host = "localhost";
 		Socket sock = new Socket(host, port);
 		
@@ -183,6 +183,36 @@ public class CoordinatorThread extends Thread {
 	    if(sock != null){
 	    	sock.close();
 	    }
+	}
+	
+	private void sendMultiMessage(int id, int port){
+		String host = "localhost";
+		PrintWriter out = null;
+		Socket sock = null;
+		try {
+			sock = new Socket(host, port);
+			out = new PrintWriter(sock.getOutputStream());
+
+			//casting linkedlist to iterable array
+			for(Message m: (Message[]) this.messageBuffer.get(new Integer(id)).toArray()){
+				//only allow a message to be sent if now-createTime <= T_d 
+				long diff = System.nanoTime() - m.getCreateTime();
+				if(diff <= this.threshold){
+					out.println(m.getMessage());
+				}
+			}
+			
+			//clean up
+			out.close();
+			sock.close();
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+			return;
+		} catch (IOException e) {
+			e.printStackTrace();
+			return;
+		}
+		
 	}
 	
 	private void sendACK(boolean status){
@@ -199,11 +229,11 @@ public class CoordinatorThread extends Thread {
 					this.sendMessage(message, p);
 				}
 				catch(UnknownHostException uhe){
-					System.out.printf("Participant with id: %d at port: %d does not exist\n", id, p.portCoordinator);
+					System.out.printf("Participant with id: %d at port: %d does not exist\n", id, p.listenPort);
 					uhe.printStackTrace();
 				}
 				catch (IOException e) {
-					System.out.printf("Participant with id: %d at port: %d IO Exception\n", id, p.portCoordinator);
+					System.out.printf("Participant with id: %d at port: %d IO Exception\n", id, p.listenPort);
 					e.printStackTrace();
 				}
 			}
