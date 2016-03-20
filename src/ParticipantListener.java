@@ -1,3 +1,8 @@
+/*File: ParticipantListener.java
+ * Authors: Montana Wong, Justin Tumale, Matthew Haneburger
+ * Listens to commands coming from Coordinator. Runs on an infinite loop.
+ * 
+ * */
 import java.net.Socket;
 
 public class ParticipantListener extends Thread{
