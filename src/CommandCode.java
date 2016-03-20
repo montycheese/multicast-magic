@@ -34,7 +34,19 @@ public enum CommandCode {
 		}
 	}
 	
-	public static int getCodeFromMethod(String method){
-		return -1;
+	public static String getCodeFromMethod(String method){
+		switch(method){
+		case "Register":
+			return "1";
+		case "Deregister":
+			return "2";
+		case "Disconnect":
+			return "3";
+		case "Reconnect":
+			return "4";
+		case "MSend":
+			return "5";
+		}
+		return "0";
 	}
 }

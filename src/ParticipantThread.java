@@ -40,7 +40,7 @@ public class ParticipantThread extends Thread{
 	public void register(int myPort){
 		//Format: Code | ID | IP | Port
 		String[]registerMessageArray = {
-				"1", 
+				CommandCode.getCodeFromMethod("Register"), 
 				String.valueOf(this.ID), 
 				String.valueOf(this.myIPAddress), 
 				String.valueOf(myPort)};
@@ -59,7 +59,10 @@ public class ParticipantThread extends Thread{
 	 */
 	public void deregister(){
 		//Format: Code | ID 
-		String[]deregisterMessageArray = {"2", String.valueOf(this.ID)};
+		String[] deregisterMessageArray = {
+				CommandCode.getCodeFromMethod("Deregister"), 
+				String.valueOf(this.ID)
+			};
 		String deregisterMessage = Arrays.toString(deregisterMessageArray);
 		
 		//TODO send the message to the coordinator
@@ -73,7 +76,7 @@ public class ParticipantThread extends Thread{
 	
 	public void disconnect(){
 		//Format: Code | ID 
-		String[]disconnectMessageArray = {"3", String.valueOf(this.ID)};
+		String[] disconnectMessageArray = {CommandCode.getCodeFromMethod("Disconnect"), String.valueOf(this.ID)};
 		String disconnectMessage = Arrays.toString(disconnectMessageArray);	
 		
 		//TODO send the message to the coordinator
@@ -91,7 +94,7 @@ public class ParticipantThread extends Thread{
 	public void reconnect(int myPort){
 		//Format: Code | ID | Port
 		String[]reconnectMessageArray = {
-				"4", 
+				CommandCode.getCodeFromMethod("Reconnect"), 
 				String.valueOf(this.ID), 
 				String.valueOf(myPort)};
 		String reconnectMessage = Arrays.toString(reconnectMessageArray);	
@@ -108,7 +111,7 @@ public class ParticipantThread extends Thread{
 	 */
 	public void msend(String message){
 		//Format: Code | ID | IP | Port
-		String[] msendMessageArray = {"5", };
+		String[] msendMessageArray = { CommandCode.getCodeFromMethod("MSend"), message };
 		String msendMessage = Arrays.toString(msendMessageArray);	
 		
 		//TODO send the message to the coordinator	
