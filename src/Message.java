@@ -10,20 +10,20 @@ public class Message {
 	private long createTime;
 	
 	//constructor
-	Message(String message){
+	public Message(String message){
 		createTime = System.nanoTime();
 		this.message = message;
 	}
 	//get message
-	String getMessage(){
+	public String getMessage(){
 		return message;
 	}
 	//get createTime; probably won't be needed
-	long getCreateTime(){
+	public long getCreateTime(){
 		return createTime;
 	}
 	//get date timestamp
-	String getTimestamp(){
+	public static String getCurrentTimestamp(){
 		Date date = new Date();
 		String timestamp = String.format("%tT\n", date);
 		return timestamp;
