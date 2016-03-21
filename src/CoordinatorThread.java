@@ -77,7 +77,7 @@ public class CoordinatorThread extends Thread {
 		
 	}
 	/**
-	* @param Message
+	* @param String message that is received by a participant within the grouo
 	* Parses message and tokenizes requests
 	* Uses switch case to determine which command to apply 
 	*/
@@ -156,9 +156,10 @@ public class CoordinatorThread extends Thread {
 			System.out.println("Error, participant not registered");
 		}
 		else{
+			//update boolean and port num
 			p.isOnline = true;
 			p.listenPort = port;
-			this.sendMultiMessage(id, port);
+			this.sendQueuedMessages(id, port);
 		}
 		
 	}
@@ -196,7 +197,7 @@ public class CoordinatorThread extends Thread {
 	    }
 	}
 	
-	private void sendMultiMessage(int id, int port){
+	private void sendQueuedMessages(int id, int port){
 		String host = "localhost";
 		PrintWriter out = null;
 		Socket sock = null;
@@ -205,13 +206,16 @@ public class CoordinatorThread extends Thread {
 			out = new PrintWriter(sock.getOutputStream());
 
 			//casting linkedlist to iterable array
-			for(Message m: (Message[]) this.messageBuffer.get(new Integer(id)).toArray()){
+			LinkedList<Message> buffer = this.messageBuffer.get(new Integer(id)); 
+			for(Message m: (Message[]) buffer.toArray()){
 				//only allow a message to be sent if now-createTime <= T_d 
 				long diff = System.nanoTime() - m.getCreateTime();
 				if(diff <= this.threshold){
 					out.println(m.getMessage());
 				}
 			}
+			//clear the message buffer
+			buffer.clear();
 			
 			//clean up
 			out.close();
@@ -230,8 +234,11 @@ public class CoordinatorThread extends Thread {
 		this.out.println((status) ? "1" : "0");
 	}
 	
+	/**
+	 * 
+	 * @param message
+	 */
 	private void multicastSend(String message){
-		//TODO
 		Participant p = null;
 		for(Integer id: this.multicastGroup.keySet()){
 			p = this.multicastGroup.get(id);
