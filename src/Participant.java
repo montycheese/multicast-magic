@@ -7,7 +7,10 @@
  * */
 import java.util.*;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.*;
+import java.io.BufferedReader;
 import java.io.File;
 
 //description above
@@ -18,11 +21,13 @@ public class Participant {
 	private int coordinatorPort;
 	protected int listenPort;
 	protected boolean isOnline;
-	private Socket participantSocket = null;
+	private Socket coordinatorSocket = null;
 	private ParticipantListener listenerCoordinator = null;
 	private String input = null;
 	private String logfileName = null;
 	private String myIPAddress= null;
+	private PrintWriter out;
+	private BufferedReader in;
 	
 	public Participant(int ID, String IP_coordinator, int portCoordinator, boolean isOnline){
 		this.ID = ID;
@@ -39,17 +44,23 @@ public class Participant {
 		
 	public void run(){
 		try {
+			//Connect to the Coordinator
 			//this.participantSocket = new Socket(this.IP_coordinator, this.portCoordinator);
 			//run on local host for now
-			this.participantSocket = new 
-					Socket(InetAddress.getLocalHost().getHostName(), this.coordinatorPort);
 			
+			//this.coordinatorSocket = new 
+			//		Socket(InetAddress.getLocalHost().getHostName(), this.coordinatorPort);
+			this.coordinatorSocket = new 
+					Socket("localhost", 5600);
+			this.out = new PrintWriter(this.coordinatorSocket.getOutputStream(), true);
+			this.in = new BufferedReader(new InputStreamReader(this.coordinatorSocket.getInputStream()));
+				
 			//create the multicast listener thread
-			this.listenerCoordinator = new ParticipantListener(this.participantSocket);
+			this.listenerCoordinator = new ParticipantListener(this.coordinatorSocket);
 			//start threads
 			this.listenerCoordinator.start();
+			
 			//retrieve a command from the user
-
 			Scanner in;
 			while (this.input != "quit"){
 				System.out.println("Enter command:" );
@@ -73,14 +84,16 @@ public class Participant {
 				
 				//create the user thread
 				ParticipantThread userCommandThread = new ParticipantThread(
+						this.coordinatorSocket,
 						this.ID, 
-						this.IP_coordinator, 
-						this.coordinatorPort, 
 						this.listenPort,
 						this.isOnline,
 						this.myIPAddress,
 						command,
-						message);
+						message,
+						this.out,
+						this.in);
+				
 				//start the thread
 				userCommandThread.start();		
 				try {

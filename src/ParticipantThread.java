@@ -1,30 +1,35 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Arrays;
 
 public class ParticipantThread extends Thread{
 	
 	public int ID;
-	public String IP_coordinator;
-	public int coordinatorPort;
 	public int listenPort;
 	public int portUserCmd;
 	public boolean isOnline;
-	public Socket participantSocket = null;
+	public Socket coordinatorSocket = null;
 	protected String myIPAddress = null;
 	protected String command = null;
 	protected String message = null;
+	private PrintWriter out;
+	private BufferedReader in;
 
 	
-	public ParticipantThread(int ID, String IP_coordinator, int coordinatorPort, int listenPort, 
-			boolean isOnline, String myIPAddress, String command, String message){
+	public ParticipantThread(Socket participantSocket, int ID, int listenPort, 
+			boolean isOnline, String myIPAddress, String command, String message, 
+			PrintWriter out, BufferedReader in){
+		this.coordinatorSocket = participantSocket;
 		this.ID = ID;
-		this.IP_coordinator = IP_coordinator;
-		this.coordinatorPort = coordinatorPort;
 		this.listenPort = listenPort;
 		this.isOnline = isOnline;
 		this.myIPAddress = myIPAddress;
 		this.command = command;
 		this.message = message;
+		this.out = out;
+		this.in = in;
 	}
 	
 	
@@ -47,7 +52,11 @@ public class ParticipantThread extends Thread{
 		
 		String registerMessage = Arrays.toString(registerMessageArray);
 		
-		//TODO send the message to the coordinator
+		//send the message to the coordinator
+		this.out.println(registerMessage);
+		this.out.flush();
+		this.receiveACK();
+
 	}
 	
 	/* Deregister
@@ -117,22 +126,32 @@ public class ParticipantThread extends Thread{
 		//TODO send the message to the coordinator	
 		}
 	
+	public void receiveACK(){
+		try {
+			String ACK = this.in.readLine();
+			System.out.println(ACK);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
 	@Override
 	public void run(){
 		switch (command){
-			case "register":
+			case "Register":
 				this.register(this.listenPort);
 				break;
-			case "deregister":
+			case "Deregister":
 				this.deregister();
 				break;
-			case "disconnect":
+			case "Disconnect":
 				this.disconnect();
 				break;
-			case "reconnect":
+			case "Reconnect":
 				this.register(this.listenPort);
 				break;
-			case "msend":
+			case "MSend":
 				this.msend(this.message);
 				break;
 		

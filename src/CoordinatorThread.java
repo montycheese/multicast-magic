@@ -82,6 +82,7 @@ public class CoordinatorThread extends Thread {
 	* Uses switch case to determine which command to apply 
 	*/
 	private void parse(String message){
+		message = message.substring(1, message.length()-1); //Remove the brackets
 		String[] tokens = message.split(",");
 		int code = Integer.valueOf(tokens[0]);
 		if(code > 5 || code < 1){
@@ -90,6 +91,7 @@ public class CoordinatorThread extends Thread {
 		String action = CommandCode.getMethodFromCode(Integer.valueOf(code));
 		//move send ack here
 		this.sendACK(true);
+		System.out.println("ACK SENT");
 		try{
 			switch(action){
 			case "Register":
