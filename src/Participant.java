@@ -112,6 +112,16 @@ public class Participant {
 			e.printStackTrace();
 		}
 	}
+	
+	@Override
+	public String toString(){
+		return String.format(
+				"Participant {id : %d, ip : %s, listenPort : %d}",
+				this.ID, 
+				this.myIPAddress, 
+				this.listenPort
+			);
+	}
 		
 	public static Participant configurationParser(String[] args) throws FileNotFoundException{
 
