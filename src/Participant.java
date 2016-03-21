@@ -148,11 +148,6 @@ public class Participant {
 
 		}
 
-		//checking
-		System.out.println(_ID);
-		System.out.println(_logFileName);
-		System.out.println(_IP_Coordinator);
-		System.out.println(_portCoordinator);
 		
 		return new Participant(_ID, _IP_Coordinator, port, true);
 	}
