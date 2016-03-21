@@ -141,7 +141,7 @@ public class ParticipantThread extends Thread{
 	public void receiveACK(){
 		try {
 			String ACK = this.in.readLine();
-			System.out.println(ACK);
+			System.out.println("ACK received from coordinator: " + ACK);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -150,23 +150,32 @@ public class ParticipantThread extends Thread{
 	
 	@Override
 	public void run(){
-		switch (command){
-			case "Register":
-				this.register(Integer.valueOf(this.message.trim()));
-				break;
-			case "Deregister":
-				this.deregister();
-				break;
-			case "Disconnect":
-				this.disconnect();
-				break;
-			case "Reconnect":
-				this.reconnect(Integer.valueOf(this.message.trim()));
-				break;
-			case "MSend":
-				this.msend(this.message);
-				break;
-		
+		//TODO becareful, you may cause an exception if you assume that the command sent by the user contains integers
+		try{
+			switch (command){
+				case "Register":
+					this.register(Integer.valueOf(this.message.trim()));
+					break;
+				case "Deregister":
+					this.deregister();
+					break;
+				case "Disconnect":
+					this.disconnect();
+					break;
+				case "Reconnect":
+					this.reconnect(Integer.valueOf(this.message.trim()));
+					break;
+				case "MSend":
+					this.msend(this.message);
+					break;
+			
+			}
+		}
+		catch(ArrayIndexOutOfBoundsException e){
+			e.printStackTrace();
+		}
+		catch(NullPointerException npe){
+			npe.printStackTrace();
 		}
 		
 	}

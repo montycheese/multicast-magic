@@ -6,6 +6,7 @@
  *will log all of the messages.
  * */
 import java.util.*;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
@@ -52,7 +53,7 @@ public class Participant {
 			//		Socket(InetAddress.getLocalHost().getHostName(), this.coordinatorPort);
 			System.out.println("this coordinator port "+ this.coordinatorPort);
 			this.coordinatorSocket = new 
-					Socket("localhost", 5600);
+					Socket("localhost", 6600);
 			this.out = new PrintWriter(this.coordinatorSocket.getOutputStream(), true);
 			this.in = new BufferedReader(new InputStreamReader(this.coordinatorSocket.getInputStream()));
 				
@@ -112,7 +113,7 @@ public class Participant {
 		}
 	}
 		
-	public static Participant configurationParser(String[] args){
+	public static Participant configurationParser(String[] args) throws FileNotFoundException{
 
 		//usage checking
 		if(args.length != 1){
@@ -132,15 +133,12 @@ public class Participant {
 		String _IP_Coordinator = null;
 		String _portCoordinator = null;
 		String _ipAndPortString = null;
-		try{
-			
-			Scanner scanner = new Scanner(file);
+		try(Scanner scanner = new Scanner(file);){
 			while(scanner.hasNext()){
 				_ID = scanner.nextInt();
 				_logFileName = scanner.next();
 				_ipAndPortString = scanner.next();
 			}
-			scanner.close();
 			
 			String[] ipAndPortArray =  _ipAndPortString.trim().split(":");
 			_IP_Coordinator = ipAndPortArray[0];
@@ -148,9 +146,6 @@ public class Participant {
 			port = Integer.valueOf(_portCoordinator);
 			
 
-		}
-		catch(IOException ioe){
-			ioe.printStackTrace();
 		}
 
 		//checking
@@ -163,8 +158,28 @@ public class Participant {
 	}
 		
 	public static void main(String[] args) {
-		Participant P1 = Participant.configurationParser(args);
-		P1.run();
+		boolean DEVELOPMENT = true;
+		if(DEVELOPMENT == true){
+			Participant P1;
+			try {
+				P1 = Participant.configurationParser(new String[]{"config/1001-message-log.txt"});
+				P1.run();
+			} catch (FileNotFoundException e) {
+				System.out.println("File not found.");
+			}
+		
+		}
+		else{
+			
+			Participant P1;
+			try {
+				P1 = Participant.configurationParser(args);
+				P1.run();
+			} catch (FileNotFoundException e) {
+				System.out.println("File not found.");
+			}
+			
+		}
 	}
 
 }
