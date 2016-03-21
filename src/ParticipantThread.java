@@ -74,7 +74,10 @@ public class ParticipantThread extends Thread{
 			};
 		String deregisterMessage = Arrays.toString(deregisterMessageArray);
 		
-		//TODO send the message to the coordinator
+		//send the message to the coordinator
+		this.out.println(deregisterMessage);
+		this.out.flush();
+		this.receiveACK();
 	}
 	
 	/* Disconnect
@@ -88,7 +91,10 @@ public class ParticipantThread extends Thread{
 		String[] disconnectMessageArray = {CommandCode.getCodeFromMethod("Disconnect"), String.valueOf(this.ID)};
 		String disconnectMessage = Arrays.toString(disconnectMessageArray);	
 		
-		//TODO send the message to the coordinator
+		//send the message to the coordinator
+		this.out.println(disconnectMessage);
+		this.out.flush();
+		this.receiveACK();
 	}
 	
 	/* Reconnect
@@ -108,7 +114,10 @@ public class ParticipantThread extends Thread{
 				String.valueOf(myPort)};
 		String reconnectMessage = Arrays.toString(reconnectMessageArray);	
 		
-		//TODO send the message to the coordinator
+		//send the message to the coordinator
+		this.out.println(reconnectMessage);
+		this.out.flush();
+		this.receiveACK();
 	}
 	
 	/* Send
@@ -123,8 +132,11 @@ public class ParticipantThread extends Thread{
 		String[] msendMessageArray = { CommandCode.getCodeFromMethod("MSend"), message };
 		String msendMessage = Arrays.toString(msendMessageArray);	
 		
-		//TODO send the message to the coordinator	
-		}
+		//send the message to the coordinator	
+		this.out.println(msendMessage);
+		this.out.flush();
+		this.receiveACK();
+	}
 	
 	public void receiveACK(){
 		try {
