@@ -48,9 +48,9 @@ public class Participant {
 		
 	public void run(){
 
-			//refactor--montana
-			this.listenerCoordinator = new ParticipantListener(this.listenPort, this.logfileName, this.threadPool);
-			this.threadPool.execute(this.listenerCoordinator);
+			//refactor--montana need to set listenPort after first register command
+			//this.listenerCoordinator = new ParticipantListener(this.listenPort, this.logfileName, this.threadPool);
+			//this.threadPool.execute(this.listenerCoordinator);
 			
 			//retrieve a command from the user
 			Scanner in;
@@ -69,13 +69,37 @@ public class Participant {
 				String [] commandAndMessage = this.input.split(" ", 2);
 				if (commandAndMessage.length == 1){
 					command = commandAndMessage[0];
+					//if disconnect shutdown the socket on listener and kill the thread
+					if(command.equalsIgnoreCase("disconnect")){
+						try {
+							this.listenerCoordinator.shutdown();
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+
 				}
 				else if (commandAndMessage.length == 2){
 					command = commandAndMessage[0];
 					message = commandAndMessage[1];
+					
+					//If the participant is registering for the first time
+					if(command.equalsIgnoreCase("Register") && Integer.valueOf(message) != this.listenPort){
+						this.listenPort = Integer.valueOf(message);
+						this.listenerCoordinator = new ParticipantListener(this.listenPort, this.logfileName, this.threadPool);
+						this.threadPool.execute(this.listenerCoordinator);
+					}
+					//if participant is reconnecting - create new listener on new port
+					else if (command.equalsIgnoreCase("reconnect")){
+						this.listenPort = Integer.valueOf(message);
+						this.listenerCoordinator = new ParticipantListener(this.listenPort, this.logfileName, this.threadPool);
+						this.threadPool.execute(this.listenerCoordinator);
+					}
 				}
 				else{
 					System.out.println("Please enter a valid command");
+					continue;
 				}
 				
 				//create the user thread
@@ -162,7 +186,7 @@ public class Participant {
 		if(DEVELOPMENT == true){
 			Participant P1;
 			try {
-				P1 = Participant.configurationParser(new String[]{"1001-message-log.txt"});
+				P1 = Participant.configurationParser(new String[]{"config/1001-message-log.txt"});
 				P1.run();
 			} catch (FileNotFoundException e) {
 				System.out.println("File not found.");

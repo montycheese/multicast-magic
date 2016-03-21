@@ -40,7 +40,7 @@ public class ParticipantThread extends Thread{
 			//		Socket(InetAddress.getLocalHost().getHostName(), this.coordinatorPort);
 
 			//this.coordinatorSocket = new Socket("localhost", 5600);
-			this.coordinatorSocket = new Socket("localhost", 5600);
+			this.coordinatorSocket = new Socket("localhost", this.coordinatorPort);
 			this.out = new PrintWriter(this.coordinatorSocket.getOutputStream(), true);
 			this.in = new BufferedReader(new InputStreamReader(this.coordinatorSocket.getInputStream()));
 			
@@ -200,24 +200,29 @@ public class ParticipantThread extends Thread{
 	
 	@Override
 	public void run(){
-
-		switch (command){
-			case "Register":
-				this.register(Integer.valueOf(this.message.trim()));
-				break;
-			case "Deregister":
-				this.deregister();
-				break;
-			case "Disconnect":
-				this.disconnect();
-				break;
-			case "Reconnect":
-				this.reconnect(Integer.valueOf(this.message.trim()));
-				break;
-			case "MSend":
-				this.msend(this.message);
-				break;
+		
+		try{ //DO NOT REMOVE
+			switch (command){
+				case "Register":
+					this.register(Integer.valueOf(this.message.trim()));
+					break;
+				case "Deregister":
+					this.deregister();
+					break;
+				case "Disconnect":
+					this.disconnect();
+					break;
+				case "Reconnect":
+					this.reconnect(Integer.valueOf(this.message.trim()));
+					break;
+				case "MSend":
+					this.msend(this.message);
+					break;
+			}
+		}catch(NullPointerException npe){
+			System.out.println("Malformed input.");
 		}
+		
 		//Close socket after methods are finished
 		try {
 			this.coordinatorSocket.close();

@@ -43,9 +43,19 @@ public class ParticipantListener extends Thread{
 			}
 		}
 		catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			//e.printStackTrace();
+			System.out.println("Listener disconnected by Participant");
 		}
+	}
+	
+	public void shutdown() throws IOException{
+		System.out.println("Shutting down listener.");
+		this.sock.close();
+		
+	}
+	
+	public void setListenPort(int port){
+		this.listenPort = port;
 	}
 
 }
