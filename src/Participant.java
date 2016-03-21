@@ -26,7 +26,7 @@ public class Participant {
 	protected boolean isOnline;
 	private Socket coordinatorSocket = null;
 	private ParticipantListener listenerCoordinator = null;
-	private String input = null;
+	private String input = "";
 	private String logfileName = null;
 	private String myIPAddress= null;
 	private PrintWriter out;
@@ -47,38 +47,16 @@ public class Participant {
 	}
 		
 	public void run(){
-		try {
-			//Connect to the Coordinator
-			//this.participantSocket = new Socket(this.IP_coordinator, this.portCoordinator);
-			//run on local host for now
-			
-			//this.coordinatorSocket = new 
-			//		Socket(InetAddress.getLocalHost().getHostName(), this.coordinatorPort);
-			
-			//TODO fix incorrect design
-			/*
-			System.out.println("this coordinator port "+ this.coordinatorPort);
-			this.coordinatorSocket = new 
-					Socket("localhost", 6600);
-			this.out = new PrintWriter(this.coordinatorSocket.getOutputStream(), true);
-			this.in = new BufferedReader(new InputStreamReader(this.coordinatorSocket.getInputStream()));
-				
-			create the multicast listener thread
-			this.listenerCoordinator = new ParticipantListener(this.coordinatorSocket);
-			//start threads
-			this.listenerCoordinator.start();
-			
-			*///TODO fix incorrect design
-			
+
 			//refactor--montana
 			this.listenerCoordinator = new ParticipantListener(this.listenPort, this.logfileName, this.threadPool);
 			this.threadPool.execute(this.listenerCoordinator);
 			
-			
 			//retrieve a command from the user
 			Scanner in;
+
 			while (true){
-				System.out.println("Enter command:" );
+				System.out.println(">>Enter command:" );
 				in = new Scanner(System.in);
 				input = in.nextLine();
 				if(input.equalsIgnoreCase("quit")){
@@ -88,7 +66,7 @@ public class Participant {
 				//parse the input for a command and a message
 				String command = null;
 				String message = null;
-				String [] commandAndMessage = input.split(" ", 2);
+				String [] commandAndMessage = this.input.split(" ", 2);
 				if (commandAndMessage.length == 1){
 					command = commandAndMessage[0];
 				}
@@ -100,40 +78,29 @@ public class Participant {
 					System.out.println("Please enter a valid command");
 				}
 				
-				this.coordinatorSocket = new 
-						Socket("localhost", 6600);
-				this.out = new PrintWriter(this.coordinatorSocket.getOutputStream(), true);
-				this.in = new BufferedReader(new InputStreamReader(this.coordinatorSocket.getInputStream()));
 				//create the user thread
 				ParticipantThread userCommandThread = new ParticipantThread(
-						this.coordinatorSocket,
 						this.ID, 
 						this.listenPort,
+						this.coordinatorPort,
 						this.isOnline,
 						this.myIPAddress,
 						command,
-						message,
-						this.out,
-						this.in);
-				
-				
+						message);		
+				//execute thread
 				this.threadPool.execute(userCommandThread);
 				try {
 					userCommandThread.join();
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+			
 			};
+			in.close();
+
 			System.out.println("Participant shutting down.");
 			//this.listenerCoordinator.participantSocket.close();
-			
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
+		} 
 	
 	@Override
 	public String toString(){
@@ -165,6 +132,7 @@ public class Participant {
 		String _IP_Coordinator = null;
 		String _portCoordinator = null;
 		String _ipAndPortString = null;
+
 		try(Scanner scanner = new Scanner(file);){
 			while(scanner.hasNext()){
 				_ID = scanner.nextInt();
@@ -194,7 +162,7 @@ public class Participant {
 		if(DEVELOPMENT == true){
 			Participant P1;
 			try {
-				P1 = Participant.configurationParser(new String[]{"config/1001-message-log.txt"});
+				P1 = Participant.configurationParser(new String[]{"1001-message-log.txt"});
 				P1.run();
 			} catch (FileNotFoundException e) {
 				System.out.println("File not found.");
