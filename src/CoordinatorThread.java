@@ -108,7 +108,7 @@ public class CoordinatorThread extends Thread {
 				this.disconnect(Integer.valueOf(tokens[1].trim()));
 				break;
 			case "Reconnect":
-				this.reconnect(Integer.valueOf(tokens[1]), Integer.valueOf(tokens[2].trim()));
+				this.reconnect(Integer.valueOf(tokens[1].trim()), Integer.valueOf(tokens[2].trim()));
 				break;
 			case "MSend":
 				this.multicastSend(tokens[1].trim());
