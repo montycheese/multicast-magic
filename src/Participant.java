@@ -29,10 +29,10 @@ public class Participant {
 	private PrintWriter out;
 	private BufferedReader in;
 	
-	public Participant(int ID, String IP_coordinator, int portCoordinator, boolean isOnline){
+	public Participant(int ID, String IP_coordinator, int coordinatorPort, boolean isOnline){
 		this.ID = ID;
 		this.IP_coordinator = IP_coordinator;
-		this.coordinatorPort = portCoordinator;
+		this.coordinatorPort = coordinatorPort;
 		this.isOnline = isOnline;
 		try {
 			InetAddress ipAddress = InetAddress.getLocalHost();
@@ -50,6 +50,7 @@ public class Participant {
 			
 			//this.coordinatorSocket = new 
 			//		Socket(InetAddress.getLocalHost().getHostName(), this.coordinatorPort);
+			System.out.println("this coordinator port "+ this.coordinatorPort);
 			this.coordinatorSocket = new 
 					Socket("localhost", 5600);
 			this.out = new PrintWriter(this.coordinatorSocket.getOutputStream(), true);
@@ -144,6 +145,7 @@ public class Participant {
 			String[] ipAndPortArray =  _ipAndPortString.trim().split(":");
 			_IP_Coordinator = ipAndPortArray[0];
 			_portCoordinator = ipAndPortArray[1];
+			port = Integer.valueOf(_portCoordinator);
 			
 
 		}

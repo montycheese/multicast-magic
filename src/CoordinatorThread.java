@@ -81,10 +81,12 @@ public class CoordinatorThread extends Thread {
 	* Parses message and tokenizes requests
 	* Uses switch case to determine which command to apply 
 	*/
-	private void parse(String message){
+	private void parse(String message){       
+		
 		message = message.substring(1, message.length()-1); //Remove the brackets
 		String[] tokens = message.split(",");
 		int code = Integer.valueOf(tokens[0]);
+
 		if(code > 5 || code < 1){
 			throw new IllegalArgumentException("Participant entered an invalid command");
 		}
@@ -95,19 +97,21 @@ public class CoordinatorThread extends Thread {
 		try{
 			switch(action){
 			case "Register":
-				this.register(Integer.valueOf(tokens[1]), tokens[2], Integer.valueOf(tokens[3]));
+				this.register(Integer.valueOf(tokens[1].trim()), tokens[2].trim(), 
+						Integer.valueOf(tokens[3].trim()));
+				System.out.println("Registeration complete");
 				break;
 			case "Deregister":
-				this.deregister(Integer.valueOf(tokens[1]));
+				this.deregister(Integer.valueOf(tokens[1].trim()));
 				break;
 			case "Disconnect":
-				this.disconnect(Integer.valueOf(tokens[1]));
+				this.disconnect(Integer.valueOf(tokens[1].trim()));
 				break;
 			case "Reconnect":
-				this.reconnect(Integer.valueOf(tokens[1]), Integer.valueOf(tokens[2]));
+				this.reconnect(Integer.valueOf(tokens[1]), Integer.valueOf(tokens[2].trim()));
 				break;
 			case "MSend":
-				this.multicastSend(tokens[1]);
+				this.multicastSend(tokens[1].trim());
 				break;
 			default:
 				System.out.println("Code meltdown failure");

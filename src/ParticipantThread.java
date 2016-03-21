@@ -140,7 +140,7 @@ public class ParticipantThread extends Thread{
 	public void run(){
 		switch (command){
 			case "Register":
-				this.register(this.listenPort);
+				this.register(Integer.valueOf(this.message.trim()));
 				break;
 			case "Deregister":
 				this.deregister();
@@ -149,7 +149,7 @@ public class ParticipantThread extends Thread{
 				this.disconnect();
 				break;
 			case "Reconnect":
-				this.register(this.listenPort);
+				this.reconnect(Integer.valueOf(this.message.trim()));
 				break;
 			case "MSend":
 				this.msend(this.message);
