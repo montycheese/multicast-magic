@@ -23,6 +23,7 @@ public class CoordinatorThread extends Thread {
 	private PrintWriter out;
 	private BufferedReader in;
 	private long threshold;
+	private static final boolean DEVELOPMENT = true;
 	
 	public CoordinatorThread(
 			ServerSocket sock, 
@@ -70,6 +71,14 @@ public class CoordinatorThread extends Thread {
 				this.in.close();
 				this.out.close();
 				this.clientSock.close();
+				
+				if(DEVELOPMENT == true){
+					System.out.println("Printing out current members of the group.");
+					for(Integer i: this.multicastGroup.keySet()){
+						Participant p = this.multicastGroup.get(i);
+						System.out.println(p.toString());
+					}	
+				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -85,7 +94,7 @@ public class CoordinatorThread extends Thread {
 		
 		message = message.substring(1, message.length()-1); //Remove the brackets
 		String[] tokens = message.split(",");
-		int code = Integer.valueOf(tokens[0]);
+		int code = Integer.valueOf(tokens[0].trim());
 
 		if(code > 5 || code < 1){
 			throw new IllegalArgumentException("Participant entered an invalid command");

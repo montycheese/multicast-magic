@@ -83,14 +83,14 @@ public class Coordinator {
 	
 
 	public static void main(String[] args) {
-		boolean DEVELOPMENT = true;
+		boolean DEVELOPMENT = false;
 		
 		if(args.length != 1 && DEVELOPMENT == false){
 			System.out.println("The program should be run as so: java Coordinator [config.txt]");
 			System.exit(0);
 		}
 		
-		String configFilePath = (DEVELOPMENT) ? "config/PP3-coordinator-conf.txt" : args[1];
+		String configFilePath = (DEVELOPMENT) ? "config/PP3-coordinator-conf.txt" : args[0];
 		Coordinator c = null;
 		
 		//create coordinator from config file
