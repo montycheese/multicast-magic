@@ -3,7 +3,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
@@ -12,8 +12,8 @@ import java.util.concurrent.Executors;
 
 public class Coordinator {
 	
-	private HashMap<Integer, Participant> multicastGroup;
-	private HashMap<Integer, LinkedList<Message>> messageBuffer;
+	private Hashtable<Integer, Participant> multicastGroup;
+	private Hashtable<Integer, LinkedList<Message>> messageBuffer;
 	private ExecutorService threadPool;
 	private long threshold;
 	private int portNum;
@@ -21,8 +21,8 @@ public class Coordinator {
 	private ServerSocket sock;
 	
 	public Coordinator(int portNum, long persistenceTimeThreshold){
-		this.multicastGroup = new HashMap<>();
-		this.messageBuffer = new HashMap<>();
+		this.multicastGroup = new Hashtable<>();
+		this.messageBuffer = new Hashtable<>();
 		this.portNum = portNum;
 		this.backlog = 20;
 		this.threshold = persistenceTimeThreshold;

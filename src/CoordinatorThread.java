@@ -11,15 +11,15 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.LinkedList;
 
 //description above
 public class CoordinatorThread extends Thread {
 	private ServerSocket sock;
 	private Socket clientSock;
-	private HashMap<Integer, Participant> multicastGroup;
-	private HashMap<Integer, LinkedList<Message>> messageBuffer;
+	private Hashtable<Integer, Participant> multicastGroup;
+	private Hashtable<Integer, LinkedList<Message>> messageBuffer;
 	private PrintWriter out;
 	private BufferedReader in;
 	private long threshold;
@@ -27,8 +27,8 @@ public class CoordinatorThread extends Thread {
 	public CoordinatorThread(
 			ServerSocket sock, 
 			Socket clientSock,
-			HashMap<Integer, Participant> multicastGroup,
-			HashMap<Integer, LinkedList<Message>> messageBuffer,
+			Hashtable<Integer, Participant> multicastGroup,
+			Hashtable<Integer, LinkedList<Message>> messageBuffer,
 			long threshold
 	){
 		this.sock = sock;
@@ -168,6 +168,7 @@ public class CoordinatorThread extends Thread {
 		return this.in.readLine();
 	}
 	
+	@SuppressWarnings("unused")
 	private void sendMessage(String message){
 		this.out.println(message);
 	}
@@ -197,16 +198,27 @@ public class CoordinatorThread extends Thread {
 	    }
 	}
 	
+	/**
+	 * Sends all queued messages to a participant who has reconnected to the mutlicast group.
+	 * The queued messages were stored for the duration the participant was disconnected.
+	 * Messages that exceed the persistence time threshold are discarded and not sent
+	 * @param id int The unique ID of the participant
+	 * @param port int The port at which the participant listens for messages from the coordinator
+	 */
 	private void sendQueuedMessages(int id, int port){
 		String host = "localhost";
 		PrintWriter out = null;
 		Socket sock = null;
-		try {
+		LinkedList<Message> buffer = this.messageBuffer.get(new Integer(id));
+		if(buffer.isEmpty()){
+			//if no queued message exist, exit method.
+			return;
+		}
+		try {	
 			sock = new Socket(host, port);
 			out = new PrintWriter(sock.getOutputStream());
-
+			
 			//casting linkedlist to iterable array
-			LinkedList<Message> buffer = this.messageBuffer.get(new Integer(id)); 
 			for(Message m: (Message[]) buffer.toArray()){
 				//only allow a message to be sent if now-createTime <= T_d 
 				long diff = System.nanoTime() - m.getCreateTime();
