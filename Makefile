@@ -2,9 +2,9 @@
 JFLAGS = -g
 JC = javac
 JVM= java 
-BIN_DIR = FTP/bin/
-SRC_DIR = FTP/src/
-CLASSPATH = -cp FTP/src/
+BIN_DIR = bin/
+SRC_DIR = src/
+CLASSPATH = -cp src/
 
 
 .SUFFIXES: .java .class
