@@ -1,7 +1,9 @@
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.Arrays;
 
 public class ParticipantThread extends Thread{
@@ -9,6 +11,7 @@ public class ParticipantThread extends Thread{
 	public int ID;
 	public int listenPort;
 	public int portUserCmd;
+	private int coordinatorPort;
 	public boolean isOnline;
 	public Socket coordinatorSocket = null;
 	protected String myIPAddress = null;
@@ -18,18 +21,34 @@ public class ParticipantThread extends Thread{
 	private BufferedReader in;
 
 	
-	public ParticipantThread(Socket participantSocket, int ID, int listenPort, 
-			boolean isOnline, String myIPAddress, String command, String message, 
-			PrintWriter out, BufferedReader in){
-		this.coordinatorSocket = participantSocket;
+	public ParticipantThread(int ID, int listenPort, int coordinatorPort,
+			boolean isOnline, String myIPAddress, String command, String message){
 		this.ID = ID;
 		this.listenPort = listenPort;
+		this.coordinatorPort = coordinatorPort;
 		this.isOnline = isOnline;
 		this.myIPAddress = myIPAddress;
 		this.command = command;
 		this.message = message;
-		this.out = out;
-		this.in = in;
+
+		try {
+			//Connect to the Coordinator
+			//this.participantSocket = new Socket(this.IP_coordinator, this.portCoordinator);
+			//run on local host for now
+
+			//this.coordinatorSocket = new 
+			//		Socket(InetAddress.getLocalHost().getHostName(), this.coordinatorPort);
+
+			//this.coordinatorSocket = new Socket("localhost", 5600);
+			this.coordinatorSocket = new Socket("localhost", 5600);
+			this.out = new PrintWriter(this.coordinatorSocket.getOutputStream(), true);
+			this.in = new BufferedReader(new InputStreamReader(this.coordinatorSocket.getInputStream()));
+			
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	
@@ -55,7 +74,13 @@ public class ParticipantThread extends Thread{
 		//send the message to the coordinator
 		this.out.println(registerMessage);
 		this.out.flush();
-		this.receiveACK();
+		
+		if (this.receiveACK() == 1){
+			System.out.println("You are now registered.");
+		}
+		else{
+			System.out.println("Error in registration.");
+		}
 
 	}
 	
@@ -77,7 +102,12 @@ public class ParticipantThread extends Thread{
 		//send the message to the coordinator
 		this.out.println(deregisterMessage);
 		this.out.flush();
-		this.receiveACK();
+		if (this.receiveACK() == 1){
+			System.out.println("You are now deregistered.");
+		}
+		else{
+			System.out.println("Error in deregistration.");
+		}
 	}
 	
 	/* Disconnect
@@ -94,7 +124,14 @@ public class ParticipantThread extends Thread{
 		//send the message to the coordinator
 		this.out.println(disconnectMessage);
 		this.out.flush();
-		this.receiveACK();
+		
+		if (this.receiveACK() == 1){
+			System.out.println("You are now disconnected.");
+		}
+		else{
+			System.out.println("Error in disconnecting.");
+		}
+		
 	}
 	
 	/* Reconnect
@@ -117,7 +154,13 @@ public class ParticipantThread extends Thread{
 		//send the message to the coordinator
 		this.out.println(reconnectMessage);
 		this.out.flush();
-		this.receiveACK();
+		
+		if (this.receiveACK() == 1){
+			System.out.println("You are now reconnected.");
+		}
+		else{
+			System.out.println("Error in reconnecting.");
+		}
 	}
 	
 	/* Send
@@ -135,47 +178,51 @@ public class ParticipantThread extends Thread{
 		//send the message to the coordinator	
 		this.out.println(msendMessage);
 		this.out.flush();
-		this.receiveACK();
+
+		if (this.receiveACK() == 1){
+			System.out.println("Message sent");
+		}
+		else{
+			System.out.println("Error in sending your message");
+		}
 	}
 	
-	public void receiveACK(){
+	public int receiveACK(){
+		String ACK = null;
 		try {
-			String ACK = this.in.readLine();
-			System.out.println("ACK received from coordinator: " + ACK);
+			ACK = this.in.readLine();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		return Integer.valueOf(ACK);
 		
 	}
 	
 	@Override
 	public void run(){
-		//TODO becareful, you may cause an exception if you assume that the command sent by the user contains integers
-		try{
-			switch (command){
-				case "Register":
-					this.register(Integer.valueOf(this.message.trim()));
-					break;
-				case "Deregister":
-					this.deregister();
-					break;
-				case "Disconnect":
-					this.disconnect();
-					break;
-				case "Reconnect":
-					this.reconnect(Integer.valueOf(this.message.trim()));
-					break;
-				case "MSend":
-					this.msend(this.message);
-					break;
-			
-			}
+
+		switch (command){
+			case "Register":
+				this.register(Integer.valueOf(this.message.trim()));
+				break;
+			case "Deregister":
+				this.deregister();
+				break;
+			case "Disconnect":
+				this.disconnect();
+				break;
+			case "Reconnect":
+				this.reconnect(Integer.valueOf(this.message.trim()));
+				break;
+			case "MSend":
+				this.msend(this.message);
+				break;
 		}
-		catch(ArrayIndexOutOfBoundsException e){
+		//Close socket after methods are finished
+		try {
+			this.coordinatorSocket.close();
+		} catch (IOException e) {
 			e.printStackTrace();
-		}
-		catch(NullPointerException npe){
-			npe.printStackTrace();
 		}
 		
 	}
