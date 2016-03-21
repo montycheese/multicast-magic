@@ -6,6 +6,8 @@
  *will log all of the messages.
  * */
 import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -29,6 +31,7 @@ public class Participant {
 	private String myIPAddress= null;
 	private PrintWriter out;
 	private BufferedReader in;
+	private ExecutorService threadPool = Executors.newCachedThreadPool();;
 	
 	public Participant(int ID, String IP_coordinator, int coordinatorPort, boolean isOnline){
 		this.ID = ID;
@@ -51,23 +54,36 @@ public class Participant {
 			
 			//this.coordinatorSocket = new 
 			//		Socket(InetAddress.getLocalHost().getHostName(), this.coordinatorPort);
+			
+			//TODO fix incorrect design
+			/*
 			System.out.println("this coordinator port "+ this.coordinatorPort);
 			this.coordinatorSocket = new 
 					Socket("localhost", 6600);
 			this.out = new PrintWriter(this.coordinatorSocket.getOutputStream(), true);
 			this.in = new BufferedReader(new InputStreamReader(this.coordinatorSocket.getInputStream()));
 				
-			//create the multicast listener thread
+			create the multicast listener thread
 			this.listenerCoordinator = new ParticipantListener(this.coordinatorSocket);
 			//start threads
 			this.listenerCoordinator.start();
 			
+			*///TODO fix incorrect design
+			
+			//refactor--montana
+			this.listenerCoordinator = new ParticipantListener(this.listenPort, this.logfileName, this.threadPool);
+			this.threadPool.execute(this.listenerCoordinator);
+			
+			
 			//retrieve a command from the user
 			Scanner in;
-			while (this.input != "quit"){
+			while (true){
 				System.out.println("Enter command:" );
 				in = new Scanner(System.in);
 				input = in.nextLine();
+				if(input.equalsIgnoreCase("quit")){
+					break;
+				}
 				
 				//parse the input for a command and a message
 				String command = null;
@@ -84,6 +100,10 @@ public class Participant {
 					System.out.println("Please enter a valid command");
 				}
 				
+				this.coordinatorSocket = new 
+						Socket("localhost", 6600);
+				this.out = new PrintWriter(this.coordinatorSocket.getOutputStream(), true);
+				this.in = new BufferedReader(new InputStreamReader(this.coordinatorSocket.getInputStream()));
 				//create the user thread
 				ParticipantThread userCommandThread = new ParticipantThread(
 						this.coordinatorSocket,
@@ -96,15 +116,17 @@ public class Participant {
 						this.out,
 						this.in);
 				
-				//start the thread
-				userCommandThread.start();		
+				
+				this.threadPool.execute(userCommandThread);
 				try {
 					userCommandThread.join();
 				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			};
-			this.listenerCoordinator.participantSocket.close();
+			System.out.println("Participant shutting down.");
+			//this.listenerCoordinator.participantSocket.close();
 			
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
