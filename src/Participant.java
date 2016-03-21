@@ -144,8 +144,6 @@ public class Participant {
 			_IP_Coordinator = ipAndPortArray[0];
 			_portCoordinator = ipAndPortArray[1];
 			port = Integer.valueOf(_portCoordinator);
-			
-
 		}
 
 		//checking

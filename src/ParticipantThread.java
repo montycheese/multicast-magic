@@ -40,7 +40,7 @@ public class ParticipantThread extends Thread{
 			//		Socket(InetAddress.getLocalHost().getHostName(), this.coordinatorPort);
 
 			//this.coordinatorSocket = new Socket("localhost", 5600);
-			this.coordinatorSocket = new Socket("localhost", 5600);
+			this.coordinatorSocket = new Socket("localhost", this.coordinatorPort);
 			this.out = new PrintWriter(this.coordinatorSocket.getOutputStream(), true);
 			this.in = new BufferedReader(new InputStreamReader(this.coordinatorSocket.getInputStream()));
 			
