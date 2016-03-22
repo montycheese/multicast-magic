@@ -43,7 +43,7 @@ public class Logger implements Runnable {
 				  /*Writes text to a character-output stream, buffering characters 
 				   *so as to provide for the efficient writing of single characters,
 				   *arrays, and strings.*/
-		          BufferedWriter bufferedWriter = new BufferedWriter(file);
+		          	  BufferedWriter bufferedWriter = new BufferedWriter(file);
 				  /*Prints formatted representations of objects to a text-output stream*/
 				  PrintWriter printer = new PrintWriter(bufferedWriter))
 				{
