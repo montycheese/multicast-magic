@@ -1,3 +1,9 @@
+/* File: ParticipantThread.java
+ * Authors: Montana Wong, Justin Tumale, Matthew Haneburger
+ * Creates the thread for partcipants. Contains all the methods that the 
+ * participant can utilize. Uses CommandCode class to identify which requests
+ * the coordinator has to handle.
+ * */
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -20,7 +26,7 @@ public class ParticipantThread extends Thread{
 	private PrintWriter out;
 	private BufferedReader in;
 
-	
+	/*Constructor for Participant Thread*/
 	public ParticipantThread(int ID, int listenPort, int coordinatorPort,
 			boolean isOnline, String myIPAddress, String command, String message){
 		this.ID = ID;
