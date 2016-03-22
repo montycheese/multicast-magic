@@ -43,6 +43,7 @@ public class ParticipantListener extends Thread{
 					
 					//may reconsider this design chice for queue message send
 					if (this.coordinatorSocket != null){
+						br.close();
 						this.coordinatorSocket.close();
 					}	
 			}
