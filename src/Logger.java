@@ -10,18 +10,17 @@ import java.io.PrintWriter;
 public class Logger implements Runnable {
 	private String fileName;
 	private String message;
-	
+	/*constructor for Logger; fileName and message to be written to file*/
 	public Logger(String fileName, String message){
 		this.fileName = fileName;
 		this.message = message;
 	}
-
+	
+	/*calls writeToFile method and performs the necessary operations*/
 	@Override
 	public void run() {
 		this.writeToFile();
-		
 	}
-	
 	
 	/*This method was written solely using Java API*/
 	
