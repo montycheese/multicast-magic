@@ -6,16 +6,17 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.File;
 
 public class Logger implements Runnable {
 	private String fileName;
 	private String message;
 	private static FileWriter file;
 	/*constructor for Logger; fileName and message to be written to file*/
-	public Logger(String fileName, String message, FileWriter file){
+	public Logger(String fileName, String message, File newFile){
 		this.fileName = fileName;
 		this.message = message;
-		this.file = file;
+		this.newFile = newFile;
 	}
 	
 	/*calls writeToFile method and performs the necessary operations*/
@@ -36,6 +37,17 @@ public class Logger implements Runnable {
 		//take the message passed in constructor and append to the file listed above.
 		// if the file doesn't exist yet, create it, other wise append to it.
 		//using bufferedWriter in case the messages get very large
+		
+		File newFile = new File(fileName);
+		if(!newFile.exists()){
+			try{
+			newFile.createNewFile();
+			}
+			catch (IOException ioe){
+				ioe.printStackTrace();
+			}
+		}
+		
 		try(      
 				/* FileWriter(File file)
 				 * This constructs a FileWriter object given a File object.
