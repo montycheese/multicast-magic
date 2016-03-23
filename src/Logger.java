@@ -10,6 +10,7 @@ import java.io.PrintWriter;
 public class Logger implements Runnable {
 	private String fileName;
 	private String message;
+	private static FileWriter file;
 	/*constructor for Logger; fileName and message to be written to file*/
 	public Logger(String fileName, String message, FileWriter file){
 		this.fileName = fileName;
