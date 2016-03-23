@@ -11,9 +11,10 @@ public class Logger implements Runnable {
 	private String fileName;
 	private String message;
 	/*constructor for Logger; fileName and message to be written to file*/
-	public Logger(String fileName, String message){
+	public Logger(String fileName, String message, FileWriter file){
 		this.fileName = fileName;
 		this.message = message;
+		this.file = file;
 	}
 	
 	/*calls writeToFile method and performs the necessary operations*/
