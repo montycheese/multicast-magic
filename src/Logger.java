@@ -38,7 +38,6 @@ public class Logger implements Runnable {
 		//take the message passed in constructor and append to the file listed above.
 		// if the file doesn't exist yet, create it, other wise append to it.
 		//using bufferedWriter in case the messages get very large
-		
 		File newFile = new File(fileName);
 		if(!newFile.exists()){
 			try{
