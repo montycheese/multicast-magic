@@ -12,15 +12,18 @@ public class Logger implements Runnable {
 	private String fileName;
 	private String message;
 	/*constructor for Logger; fileName and message to be written to file*/
-	public Logger(String fileName, String message){
+	public Logger(String fileName){
 		this.fileName = fileName;
-		this.message = message;
 	}
 	
 	/*calls writeToFile method and performs the necessary operations*/
 	@Override
 	public void run() {
 		this.writeToFile();
+	}
+	
+	public void setMessage(String message){
+		this.message = message;
 	}
 	
 	/*This method was written solely using Java API*/
@@ -66,4 +69,5 @@ public class Logger implements Runnable {
 		  }
 		/*Method Unit Tested*/
 	}
+	
 }

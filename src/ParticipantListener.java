@@ -33,14 +33,17 @@ public class ParticipantListener extends Thread{
 			while(true){
 					this.coordinatorSocket = this.sock.accept();
 					BufferedReader br = new BufferedReader(new InputStreamReader(coordinatorSocket.getInputStream()));
-					String message = br.readLine();
+					String message;
+					Logger logger = new Logger(this.logFileName);
 					//TODO HANDLE request with a new custom thread. I called it Logger
 					//Receive message from coordinator here
 					//create logger thread
+
+					while ((message = br.readLine() )!= null){
+						logger.setMessage(message);
+						this.threadPool.execute(logger);	
+					}	
 	
-					Logger logger = new Logger(this.logFileName, message);
-					this.threadPool.execute(logger);
-					
 					//may reconsider this design chice for queue message send
 					if (this.coordinatorSocket != null){
 						br.close();
