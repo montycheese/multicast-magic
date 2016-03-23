@@ -179,6 +179,7 @@ public class Participant {
 				_ID = scanner.nextInt();
 				_logfileName = scanner.next();
 				_ipAndPortString = scanner.next();
+				break;
 			}
 
 			String[] ipAndPortArray =  _ipAndPortString.trim().split(":");
