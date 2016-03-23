@@ -11,12 +11,10 @@ import java.io.File;
 public class Logger implements Runnable {
 	private String fileName;
 	private String message;
-	private static FileWriter file;
 	/*constructor for Logger; fileName and message to be written to file*/
-	public Logger(String fileName, String message, File newFile){
+	public Logger(String fileName, String message){
 		this.fileName = fileName;
 		this.message = message;
-		this.newFile = newFile;
 	}
 	
 	/*calls writeToFile method and performs the necessary operations*/
