@@ -33,8 +33,9 @@ public class Participant {
 	private BufferedReader in;
 	private ExecutorService threadPool = Executors.newCachedThreadPool();;
 	
-	public Participant(int ID, String IP_coordinator, int coordinatorPort, boolean isOnline){
+	public Participant(int ID, String logfileName, String IP_coordinator, int coordinatorPort, boolean isOnline){
 		this.ID = ID;
+		this.logfileName = logfileName;
 		this.IP_coordinator = IP_coordinator;
 		this.coordinatorPort = coordinatorPort;
 		this.isOnline = isOnline;
@@ -46,6 +47,7 @@ public class Participant {
 		}
 	}
 	
+
 	//Overloaded constructor for a registered Participant with an elected listenPort
 	public Participant(int ID, String IP_coordinator, int coordinatorPort, int listenPort, boolean isOnline){
 		this.ID = ID;
@@ -167,7 +169,7 @@ public class Participant {
 		//TODO GET PORT
 		int port = -1;
 		int _ID = -1;
-		String _logFileName = null;
+		String _logfileName = null;
 		String _IP_Coordinator = null;
 		String _portCoordinator = null;
 		String _ipAndPortString = null;
@@ -175,20 +177,17 @@ public class Participant {
 		try(Scanner scanner = new Scanner(file);){
 			while(scanner.hasNext()){
 				_ID = scanner.nextInt();
-				_logFileName = scanner.next();
+				_logfileName = scanner.next();
 				_ipAndPortString = scanner.next();
 			}
-			
+
 			String[] ipAndPortArray =  _ipAndPortString.trim().split(":");
 			_IP_Coordinator = ipAndPortArray[0];
 			_portCoordinator = ipAndPortArray[1];
 			port = Integer.valueOf(_portCoordinator);
-			
-
 		}
 
-		
-		return new Participant(_ID, _IP_Coordinator, port, true);
+		return new Participant(_ID, _logfileName, _IP_Coordinator, port, true);
 	}
 		
 	public static void main(String[] args) {
