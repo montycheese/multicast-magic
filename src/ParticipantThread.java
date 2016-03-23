@@ -73,6 +73,7 @@ public class ParticipantThread extends Thread{
 				CommandCode.getCodeFromMethod("Register"), 
 				String.valueOf(this.ID), 
 				String.valueOf(this.myIPAddress), 
+				String.valueOf(this.coordinatorPort),
 				String.valueOf(myPort)};
 		
 		String registerMessage = Arrays.toString(registerMessageArray);

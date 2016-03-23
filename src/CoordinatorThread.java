@@ -24,16 +24,19 @@ public class CoordinatorThread extends Thread {
 	private BufferedReader in;
 	private long threshold;
 	private static final boolean DEVELOPMENT = true;
+	private int portnum;
 	
 	public CoordinatorThread(
 			ServerSocket sock, 
 			Socket clientSock,
+			int portnum,
 			Hashtable<Integer, Participant> multicastGroup,
 			Hashtable<Integer, LinkedList<Message>> messageBuffer,
 			long threshold
 	){
 		this.sock = sock;
 		this.clientSock = clientSock;
+		this.portnum = portnum;
 		this.multicastGroup = multicastGroup;
 		this.messageBuffer = messageBuffer;
 		this.threshold = threshold;
@@ -106,8 +109,9 @@ public class CoordinatorThread extends Thread {
 		try{
 			switch(action){
 			case "Register":
+				System.out.println("token 3: " + tokens[3]);
 				this.register(Integer.valueOf(tokens[1].trim()), tokens[2].trim(), 
-						Integer.valueOf(tokens[3].trim()));
+						Integer.valueOf(tokens[3].trim()), Integer.valueOf(tokens[4].trim()));
 				System.out.println("Registeration complete");
 				break;
 			case "Deregister":
@@ -136,8 +140,8 @@ public class CoordinatorThread extends Thread {
 		
 	}
 	
-	private void register(int id, String ip, int port){
-		Participant p = new Participant(id, ip, port, true);
+	private void register(int id, String ip, int port, int listenPort){
+		Participant p = new Participant(id, ip, port, listenPort, true);
 		//add participant to group
 		this.multicastGroup.put(id, p);
 		//create a message buffer for this new participant

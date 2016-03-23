@@ -49,6 +49,7 @@ public class Coordinator {
 			Socket clientSocket = this.sock.accept();
 			CoordinatorThread worker = new CoordinatorThread(this.sock,
 					clientSocket,
+					this.portNum,
 					this.multicastGroup,
 					this.messageBuffer,
 					this.threshold

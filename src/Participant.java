@@ -45,6 +45,21 @@ public class Participant {
 			e.printStackTrace();
 		}
 	}
+	
+	//Overloaded constructor for a registered Participant with an elected listenPort
+	public Participant(int ID, String IP_coordinator, int coordinatorPort, int listenPort, boolean isOnline){
+		this.ID = ID;
+		this.IP_coordinator = IP_coordinator;
+		this.coordinatorPort = coordinatorPort;
+		this.isOnline = isOnline;
+		this.listenPort = listenPort;
+		try {
+			InetAddress ipAddress = InetAddress.getLocalHost();
+			this.myIPAddress = ipAddress.getHostName();
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		}
+	}
 		
 	public void run(){
 
