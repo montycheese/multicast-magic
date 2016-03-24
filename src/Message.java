@@ -4,8 +4,6 @@
  * */
 import java.util.Date; //use for create time
 public class Message {
-	
-	//private SimpleDateFormat date;
 	private String message;
 	private long createTime;
 	
@@ -18,7 +16,7 @@ public class Message {
 	public String getMessage(){
 		return message;
 	}
-	//get createTime; probably won't be needed
+
 	public long getCreateTime(){
 		return createTime;
 	}
@@ -32,14 +30,4 @@ public class Message {
 	public String toString(){
 		return this.message;
 	}
-	
-	/*
-	 * Whiteboard Reference:
-	 * if(System.nanoTime() - m1.getCreateTime() <= persistenceTimeThreshold)
-	 * {
-	 * send(m1, p1); -> means we have not yet passed the treshold, therefore 
-	 * 				 -> we can receive out messages
-	 * }
-	 * */
-	
 }
