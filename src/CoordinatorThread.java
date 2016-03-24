@@ -238,13 +238,16 @@ public class CoordinatorThread extends Thread {
 			out = new PrintWriter(sock.getOutputStream());
 			
 			//casting linkedlist to iterable array
-			for(Message m: (Message[]) buffer.toArray()){
-				//only allow a message to be sent if now-createTime <= T_d 
-				long diff = System.nanoTime() - m.getCreateTime();
+			
+			for(Object o: buffer.toArray()){
+				Message m = (Message) o;
+				long diff = ((System.nanoTime() - m.getCreateTime())/ 1000000000);
 				if(diff <= this.threshold){
 					out.println(m.getMessage());
 				}
+				
 			}
+			
 			//clear the message buffer
 			buffer.clear();
 			
