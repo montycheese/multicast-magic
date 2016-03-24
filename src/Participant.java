@@ -88,7 +88,7 @@ public class Participant {
 					command = commandAndMessage[0];
 					
 					//check for incorrect uses
-					if(!(command.equalsIgnorecase("disconnect") ||
+					if(!(command.equalsIgnoreCase("disconnect") ||
 						command.equalsIgnoreCase("deregister"))){
 							System.out.println("Please enter a valid command");
 							continue;
@@ -111,7 +111,7 @@ public class Participant {
 					message = commandAndMessage[1];
 					
 					//check for incorrect uses
-					if((command.equalsIgnorecase("disconnect") ||
+					if((command.equalsIgnoreCase("disconnect") ||
 						command.equalsIgnoreCase("deregister"))){
 							System.out.println("Please enter a valid command");
 							continue;
@@ -208,7 +208,7 @@ public class Participant {
 	}
 		
 	public static void main(String[] args) {
-		boolean DEVELOPMENT = true;
+		boolean DEVELOPMENT = false;
 		if(DEVELOPMENT == true){
 			Participant P1;
 			try {
