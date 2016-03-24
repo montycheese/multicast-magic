@@ -1,7 +1,6 @@
 /*File: ParticipantListener.java
  * Authors: Montana Wong, Justin Tumale, Matthew Haneburger
  * Listens to commands coming from Coordinator. Runs on an infinite loop.
- * 
  * */
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -12,7 +11,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
+//description given above
 public class ParticipantListener extends Thread{
 	
 	private int listenPort;
@@ -21,7 +20,7 @@ public class ParticipantListener extends Thread{
 	private ExecutorService threadPool;
 	private String logFileName;
 	private Queue <String> messageQueue;
-	
+	//constructor for the participant listener
 	public ParticipantListener(int listenPort, String logFileName, ExecutorService threadPool){
 		this.listenPort = listenPort;
 		this.threadPool = threadPool;
@@ -42,7 +41,6 @@ public class ParticipantListener extends Thread{
 						this.messageQueue.add(message);
 					}
 					System.out.println("message to log " +  this.messageQueue.peek());
-					//TODO HANDLE request with a new custom thread. I called it Logger
 					//Receive message from coordinator here
 					//create logger thread
 
@@ -61,7 +59,8 @@ public class ParticipantListener extends Thread{
 			System.out.println("Listener disconnected by Participant");
 		}
 	}
-	
+	//closes connection to participant listener
+	//@throws IOException
 	public void shutdown() throws IOException{
 		System.out.println("Shutting down listener.");
 		this.sock.close();
