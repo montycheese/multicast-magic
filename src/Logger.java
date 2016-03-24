@@ -6,14 +6,18 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.io.File;
 
 public class Logger implements Runnable {
 	private String fileName;
 	private String message;
+	private Queue <String> messageQueue;
 	/*constructor for Logger; fileName and message to be written to file*/
-	public Logger(String fileName){
+	public Logger(String fileName, Queue<String> messageQueue){
 		this.fileName = fileName;
+		this.messageQueue = messageQueue;
 	}
 	
 	/*calls writeToFile method and performs the necessary operations*/
@@ -61,7 +65,11 @@ public class Logger implements Runnable {
 				  PrintWriter printer = new PrintWriter(bufferedWriter))
 				{
 			//prints to file
-		     printer.println(message);
+			System.out.println("message to log from logger : " + this.messageQueue.peek());
+			while(!this.messageQueue.isEmpty()){
+				this.message = this.messageQueue.remove();
+				printer.println(this.message);
+			}
 		  }  //throws exception if error should occur
 		  catch( IOException ioe ){
 		      ioe.printStackTrace();

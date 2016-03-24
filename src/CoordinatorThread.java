@@ -236,9 +236,7 @@ public class CoordinatorThread extends Thread {
 		try {	
 			sock = new Socket(host, port);
 			out = new PrintWriter(sock.getOutputStream());
-			
-			//casting linkedlist to iterable array
-			
+						
 			for(Object o: buffer.toArray()){
 				Message m = (Message) o;
 				long diff = ((System.nanoTime() - m.getCreateTime())/ 1000000000);

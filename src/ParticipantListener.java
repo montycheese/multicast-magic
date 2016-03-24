@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -18,6 +20,7 @@ public class ParticipantListener extends Thread{
 	private Socket coordinatorSocket;
 	private ExecutorService threadPool;
 	private String logFileName;
+	private Queue <String> messageQueue;
 	
 	public ParticipantListener(int listenPort, String logFileName, ExecutorService threadPool){
 		this.listenPort = listenPort;
@@ -29,20 +32,22 @@ public class ParticipantListener extends Thread{
 	public void run(){
 		try {
 		this.sock = new ServerSocket(this.listenPort);
+		this.messageQueue = new LinkedList<String>();
 		System.out.println("Listener running on port: " + this.listenPort);
 			while(true){
 					this.coordinatorSocket = this.sock.accept();
 					BufferedReader br = new BufferedReader(new InputStreamReader(coordinatorSocket.getInputStream()));
 					String message;
-					Logger logger = new Logger(this.logFileName);
+					while ((message = br.readLine() )!= null){
+						this.messageQueue.add(message);
+					}
+					System.out.println("message to log " +  this.messageQueue.peek());
 					//TODO HANDLE request with a new custom thread. I called it Logger
 					//Receive message from coordinator here
 					//create logger thread
 
-					while ((message = br.readLine() )!= null){
-						logger.setMessage(message);
-						this.threadPool.execute(logger);	
-					}	
+					Logger logger = new Logger(this.logFileName, this.messageQueue);	
+					this.threadPool.execute(logger);
 	
 					//may reconsider this design chice for queue message send
 					if (this.coordinatorSocket != null){
