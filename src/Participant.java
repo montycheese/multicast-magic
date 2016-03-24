@@ -86,6 +86,14 @@ public class Participant {
 				String [] commandAndMessage = this.input.split(" ", 2);
 				if (commandAndMessage.length == 1){
 					command = commandAndMessage[0];
+					
+					//check for incorrect uses
+					if(!(command.equalsIgnorecase('disconnect') ||
+						command.equalsIgnoreCase('deregister'))){
+							System.out.println("Please enter a valid command");
+							continue;
+					}
+					
 					//if disconnect shutdown the socket on listener and kill the thread
 					if(command.equalsIgnoreCase("disconnect")){
 						try {
@@ -95,11 +103,19 @@ public class Participant {
 							e.printStackTrace();
 						}
 					}
+					
 
 				}
 				else if (commandAndMessage.length == 2){
 					command = commandAndMessage[0];
 					message = commandAndMessage[1];
+					
+					//check for incorrect uses
+					if((command.equalsIgnorecase('disconnect') ||
+						command.equalsIgnoreCase('deregister'))){
+							System.out.println("Please enter a valid command");
+							continue;
+						}
 					
 					//If the participant is registering for the first time
 					if(command.equalsIgnoreCase("Register") && Integer.valueOf(message) != this.listenPort){
