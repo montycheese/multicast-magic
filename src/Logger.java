@@ -1,6 +1,8 @@
 /* File: Logger.java
  * Authors: Montana Wong, Justin Tumale, Matthew Haneburger
  * Logs multicast messages from Coordinator to Participant to a specified file
+ * Uses queue to temporarily store messages that the users will be able to see
+ * then adds/writes them to the file
  */
 import java.io.BufferedWriter;
 import java.io.FileWriter;
