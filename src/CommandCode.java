@@ -16,7 +16,7 @@ public enum CommandCode {
 		this.code = code;
 		this.command = command;
 	}
-	
+	//@params int code
 	public static String getMethodFromCode(int code){
 		switch(code){
 		case 1:
@@ -33,7 +33,8 @@ public enum CommandCode {
 			return "ERROR";
 		}
 	}
-	
+	/*returns appropriate code for appropriate method*/
+	//@params String method
 	public static String getCodeFromMethod(String method){
 		switch(method){
 		case "Register":
