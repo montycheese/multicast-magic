@@ -1,5 +1,2 @@
-
-
-public class CoordinatorListener {
-
-}
+//
+public class CoordinatorListener {}
