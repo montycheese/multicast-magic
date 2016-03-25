@@ -105,14 +105,14 @@ public class CoordinatorThread extends Thread {
 		String action = CommandCode.getMethodFromCode(Integer.valueOf(code));
 		//move send ack here
 		this.sendACK(true);
-		System.out.println("ACK SENT");
+		//System.out.println("ACK SENT");
 		try{
 			switch(action){
 			case "Register":
-				System.out.println("token 3: " + tokens[3]);
+				//System.out.println("token 3: " + tokens[3]);
 				this.register(Integer.valueOf(tokens[1].trim()), tokens[2].trim(), 
 						Integer.valueOf(tokens[3].trim()), Integer.valueOf(tokens[4].trim()));
-				System.out.println("Registeration complete");
+				//System.out.println("Registeration complete");
 				break;
 			case "Deregister":
 				this.deregister(Integer.valueOf(tokens[1].trim()));
@@ -239,7 +239,7 @@ public class CoordinatorThread extends Thread {
 						
 			for(Object o: buffer.toArray()){
 				Message m = (Message) o;
-				long diff = ((System.nanoTime() - m.getCreateTime())/ 1000000000);
+				long diff = ((System.nanoTime() - m.getCreateTime())/ 1_000_000_000);
 				if(diff <= this.threshold){
 					out.println(m.getMessage());
 				}

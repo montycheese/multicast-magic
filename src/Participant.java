@@ -64,11 +64,6 @@ public class Participant {
 	}
 		
 	public void run(){
-
-			//refactor--montana need to set listenPort after first register command
-			//this.listenerCoordinator = new ParticipantListener(this.listenPort, this.logfileName, this.threadPool);
-			//this.threadPool.execute(this.listenerCoordinator);
-			
 			//retrieve a command from the user
 			Scanner in;
 
@@ -77,6 +72,13 @@ public class Participant {
 				in = new Scanner(System.in);
 				input = in.nextLine();
 				if(input.equalsIgnoreCase("quit")){
+					if(this.listenerCoordinator != null){
+						try {
+							this.listenerCoordinator.shutdown();
+						} catch (IOException e) {
+							//e.printStackTrace();
+						}
+					}
 					break;
 				}
 				
@@ -100,7 +102,7 @@ public class Participant {
 							this.listenerCoordinator.shutdown();
 						} catch (IOException e) {
 							// TODO Auto-generated catch block
-							e.printStackTrace();
+							//e.printStackTrace();
 						}
 					}
 					
@@ -212,7 +214,7 @@ public class Participant {
 		if(DEVELOPMENT == true){
 			Participant P1;
 			try {
-				P1 = Participant.configurationParser(new String[]{"config/1001-message-log.txt"});
+				P1 = Participant.configurationParser(new String[]{"config/PP3-participant-conf.txt"});
 				P1.run();
 			} catch (FileNotFoundException e) {
 				System.out.println("File not found.");

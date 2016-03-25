@@ -34,7 +34,7 @@ public class ParticipantThread extends Thread{
 		this.coordinatorPort = coordinatorPort;
 		this.isOnline = isOnline;
 		this.myIPAddress = myIPAddress;
-		this.command = command;
+		this.command = command.toLowerCase();
 		this.message = message;
 
 		try {
@@ -178,6 +178,11 @@ public class ParticipantThread extends Thread{
 	 * @param message: the message to be multicasted
 	 */
 	public void msend(String message){
+		if(!this.isOnline){
+			System.out.println("Participant is disconnected, cannot multicast send!");
+			return;
+		}
+		
 		//Format: Code | ID | IP | Port
 		String[] msendMessageArray = { CommandCode.getCodeFromMethod("MSend"), message };
 		String msendMessage = Arrays.toString(msendMessageArray);	
@@ -210,21 +215,24 @@ public class ParticipantThread extends Thread{
 		
 		try{ //DO NOT REMOVE
 			switch (command){
-				case "Register":
+				case "register":
 					this.register(Integer.valueOf(this.message.trim()));
 					break;
-				case "Deregister":
+				case "deregister":
 					this.deregister();
 					break;
-				case "Disconnect":
+				case "disconnect":
 					this.disconnect();
 					break;
-				case "Reconnect":
+				case "reconnect":
 					this.reconnect(Integer.valueOf(this.message.trim()));
 					break;
-				case "MSend":
+				case "msend":
 					this.msend(this.message);
 					break;
+				default:
+					System.out.println("Command not recognized");
+					return;
 			}
 		}catch(NullPointerException npe){
 			System.out.println("Malformed input.");
@@ -232,7 +240,8 @@ public class ParticipantThread extends Thread{
 		
 		//Close socket after methods are finished
 		try {
-			this.coordinatorSocket.close();
+			if(this.coordinatorSocket != null)
+				this.coordinatorSocket.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

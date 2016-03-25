@@ -32,7 +32,7 @@ public class ParticipantListener extends Thread{
 		try {
 		this.sock = new ServerSocket(this.listenPort);
 		this.messageQueue = new LinkedList<String>();
-		System.out.println("Listener running on port: " + this.listenPort);
+		//System.out.println("Listener running on port: " + this.listenPort);
 			while(true){
 					this.coordinatorSocket = this.sock.accept();
 					BufferedReader br = new BufferedReader(new InputStreamReader(coordinatorSocket.getInputStream()));
@@ -40,7 +40,7 @@ public class ParticipantListener extends Thread{
 					while ((message = br.readLine() )!= null){
 						this.messageQueue.add(message);
 					}
-					System.out.println("message to log " +  this.messageQueue.peek());
+					//System.out.println("message to log " +  this.messageQueue.peek());
 					//Receive message from coordinator here
 					//create logger thread
 
@@ -56,13 +56,13 @@ public class ParticipantListener extends Thread{
 		}
 		catch (IOException e) {
 			//e.printStackTrace();
-			System.out.println("Listener disconnected by Participant");
+			//System.out.println("Listener disconnected by Participant");
 		}
 	}
 	//closes connection to participant listener
 	//@throws IOException
 	public void shutdown() throws IOException{
-		System.out.println("Shutting down listener.");
+		//System.out.println("Shutting down listener.");
 		this.sock.close();
 		
 	}

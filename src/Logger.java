@@ -67,7 +67,7 @@ public class Logger implements Runnable {
 				  PrintWriter printer = new PrintWriter(bufferedWriter))
 				{
 			//prints to file
-			System.out.println("message to log from logger : " + this.messageQueue.peek());
+			//System.out.println("message to log from logger : " + this.messageQueue.peek());
 			while(!this.messageQueue.isEmpty()){
 				this.message = this.messageQueue.remove();
 				printer.println(this.message);
