@@ -1,3 +1,9 @@
+/* File: Coordinator.java
+* Authors: Montana Wong, Justin Tumale, Matthew Haneburger
+* Runs with configuration file that denotes the port number. Allows participants to
+* connect and register, send messages, and multi-cast messages to all members of the 
+* pool
+*/
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
