@@ -16,7 +16,7 @@ public class Message {
 	public String getMessage(){
 		return message;
 	}
-
+	//returns creation time on message
 	public long getCreateTime(){
 		return createTime;
 	}
@@ -26,7 +26,7 @@ public class Message {
 		String timestamp = String.format("%tT\n", date);
 		return timestamp;
 	}
-	
+	//prints message 
 	public String toString(){
 		return this.message;
 	}
